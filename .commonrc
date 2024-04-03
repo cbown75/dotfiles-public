@@ -1,0 +1,22 @@
+
+alias vim='nvim'
+alias ls='colorls'
+alias tf=terraform
+
+alias kunhealthy="kgpwide -A | egrep -v 'Completed|1/1|2/2|3/3|4/4|5/5|6/6|7/7'  | tee >&2 | wc -l"
+alias kg='kubectl get'
+alias kd='kubectl describe'
+alias kgoyaml='kubectl get -oyaml'
+alias kgpv='kubectl get persistentvolume'
+alias kdpv='kubectl describe persistentvolume'
+
+alias gitall='git checkout main && git fetch && git pull'
+
+alias cdd='cd ~/.dotfiles'
+alias cdg='cd ~/git'
+alias cdt='cd ~/git/terraform'
+alias cdk='cd ~/git/kubernetes-clusters'
+
+alias brews='brew update && brew bundle -v --file ~/Brewfile && brew upgrade && brew cleanup'
+
+alias goodmorning='brews && cdd && git fetch && cdt && git fetch && cdd && cd .config/nvim && gl && cdd'
