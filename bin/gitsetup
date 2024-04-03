@@ -1,0 +1,7 @@
+git config --global rerere.enabled true
+git config --global branch.sort -committerdate
+git config --global column.ui auto
+git config --global gpg.format ssh
+git config --global user.signingKey ~/.ssh/id_ed25519.pub
+git config core.untrackedcache true
+git config core.fsmonitor true
