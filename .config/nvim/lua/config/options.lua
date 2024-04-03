@@ -2,10 +2,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 vim.cmd("set modifiable")
-vim.cmd("set expandtab")
-vim.cmd("set tabstop=2")
 vim.cmd("set softtabstop=2")
-vim.cmd("set shiftwidth=2")
 
 -- Navigate vim panes better
 vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
@@ -18,6 +15,13 @@ vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>")
 -- Make line numbers default
 vim.opt.number = true
 vim.opt.relativenumber = true
+
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
+vim.opt.autoindent = true
+
+vim.opt.wrap = false
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = "a"
@@ -68,4 +72,6 @@ vim.opt.scrolloff = 10
 vim.opt.hlsearch = true
 
 -- disable swapfiles because they are fucking garbage
-vim.o.swapfile = false
+vim.opt.swapfile = false
+
+vim.opt.termguicolors = true
