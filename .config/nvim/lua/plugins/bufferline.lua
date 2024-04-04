@@ -1,16 +1,8 @@
 return {
 	"akinsho/bufferline.nvim",
 	event = "VeryLazy",
-	enabled = not vim.g.started_by_firenvim,
-		-- stylua: ignore
-		keys = {
-			{ '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle pin' },
-			{ '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Delete non-pinned buffers' },
-			{ '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>', desc = 'Delete other buffers' },
-			{ '<leader>br', '<Cmd>BufferLineCloseRight<CR>', desc = 'Delete buffers to the right' },
-			{ '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>', desc = 'Delete buffers to the left' },
-			{ '<leader>tp', '<Cmd>BufferLinePick<CR>', desc = 'Tab Pick' },
-		},
+	dependencies = { "nvim-tree/nvim-web-devicons" },
+	version = "*",
 	opts = {
 		options = {
 			mode = "tabs",
