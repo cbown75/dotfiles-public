@@ -16,7 +16,9 @@ alias cdd='cd ~/.dotfiles'
 alias cdg='cd ~/git'
 alias cdt='cd ~/git/terraform'
 alias cdk='cd ~/git/kubernetes-clusters'
+alias cddp='cd ~/.dotfiles-public'
+
 
 alias brews='brew update && brew bundle -v --file ~/Brewfile && brew upgrade && brew cleanup'
 
-alias goodmorning='brews && cdd && git fetch && cdt && git fetch && cdd && cd .config/nvim && gl && cdd'
+alias goodmorning='brews && cdd && gl && cdt && gl && cddp && gl && cdk && gl && cdg'
