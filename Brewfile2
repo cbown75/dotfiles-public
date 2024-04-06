@@ -1,0 +1,25 @@
+tap "fluxcd/tap"
+tap "microsoft/mssql-release"
+tap "spacelift-io/spacelift"
+brew "argo"
+brew "azure-cli"
+brew "fluxcd/tap/flux"
+brew "microsoft/mssql-release/mssql-tools"
+brew "spacelift-io/spacelift/spacectl"
+brew "sqlite"
+brew "vault", restart_service: true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
