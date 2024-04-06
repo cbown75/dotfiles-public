@@ -2,9 +2,18 @@
 export shell="zsh"
 source ~/.commonrc
 source ~/.warpcli
-source ~/.private/.cloudflarerc
-source ~/.private/.spaceliftrc
-source ~/.private/.updaterrc
+if [[ -r "~/.sshrc" ]]; then
+  source ~/.sshrc
+fi
+if [[ -r "~/.private/.cloudflarerc" ]]; then 
+  source ~/.private/.cloudflarerc
+fi
+if [[ -r "~/.private/.spaceliftrc" ]]; then
+  source ~/.private/.spaceliftrc
+fi
+if [[ -r "~/.private/.updaterrc" ]]; then
+  source ~/.private/.updaterrc
+fi
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
