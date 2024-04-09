@@ -1,7 +1,7 @@
+export PATH=/opt/homebrew:/opt/homebrew/bin:$HOME/bin:/usr/local/sbin:/usr/local/bin:$PATH
 
-export shell="zsh"
 source ~/.commonrc
-source ~/.warpcli
+#source ~/.warpcli
 if [[ -r "~/.sshrc" ]]; then
   source ~/.sshrc
 fi
@@ -26,8 +26,6 @@ fi
 export HOMEBREW_PREFIX=$(brew --prefix)
 
 setopt autocd
-
-export PATH=/opt/homebrew:/opt/homebrew/bin:$HOME/bin:/usr/local/sbin:/usr/local/bin:$PATH
 
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -61,5 +59,3 @@ eval "$(pyenv init -)"
 
 source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOMEBREW_PREFIX/share/zsh-you-should-use/you-should-use.plugin.zsh
-
-neofetch
