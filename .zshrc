@@ -2,16 +2,16 @@ export PATH=/opt/homebrew:/opt/homebrew/bin:$HOME/bin:/usr/local/sbin:/usr/local
 
 source ~/.commonrc
 #source ~/.warpcli
-if [[ -r "~/.sshrc" ]]; then
+if [ -r ~/.sshrc ]; then
   source ~/.sshrc
 fi
-if [[ -r "~/.private/.cloudflarerc" ]]; then 
+if [ -r ~/.private/.cloudflarerc ]; then 
   source ~/.private/.cloudflarerc
 fi
-if [[ -r "~/.private/.spaceliftrc" ]]; then
+if [ -r ~/.private/.spaceliftrc ]; then
   source ~/.private/.spaceliftrc
 fi
-if [[ -r "~/.private/.updaterrc" ]]; then
+if [ -f ~/.private/.updaterrc ]; then
   source ~/.private/.updaterrc
 fi
 
