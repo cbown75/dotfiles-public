@@ -18,7 +18,7 @@ require("lazy").setup({
 		notify = false,
 	},
 	change_detection = {
-		notify = false,
+		notify = true,
 	},
 	install = { colorscheme = { "catppuccin", "catppuccin-mocha" } },
 	performance = {
