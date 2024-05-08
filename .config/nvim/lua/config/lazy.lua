@@ -20,27 +20,10 @@ require("lazy").setup({
 	change_detection = {
 		notify = false,
 	},
-	defaults = {
-		lazy = false,
-	},
 	install = { colorscheme = { "catppuccin", "catppuccin-mocha" } },
 	performance = {
 		cache = {
 			enabled = true,
-		},
-		rtp = {
-			-- disable some rtp plugins
-			disabled_plugins = {
-				"gzip",
-				-- "matchit",
-				-- "matchparen",
-				-- "netrwPlugin",
-				"rplugin",
-				"tarPlugin",
-				"tohtml",
-				"tutor",
-				"zipPlugin",
-			},
 		},
 	},
 })
