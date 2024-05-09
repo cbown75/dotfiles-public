@@ -15,18 +15,12 @@ brew "sqlite"
 brew "stern"
 brew "wakeonlan"
 brew "vault", restart_service: true
-cask "alacritty"
-cask "google-chrome"
-cask "google-drive"
 cask "lens"
 cask "microsoft-remote-desktop"
 cask "mysqlworkbench"
 cask "powershell"
-cask "steam"
-cask "via"
 cask "visual-studio-code"
 mas "Okta Extension App", id: 1439967473
-mas "Todoist", id: 585829637
 
 
 
