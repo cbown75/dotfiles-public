@@ -17,28 +17,34 @@ vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+--vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+--vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+--vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+--vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+
+--  See `:help wincmd` for a list of all window commands
+vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { desc = "Move focus to the right window" })
+vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { desc = "Move focus to the lower window" })
+vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { desc = "Move focus to the upper window" })
 
 vim.keymap.set("n", "<leader>xx", function()
-	require("trouble").toggle()
+  require("trouble").toggle()
 end)
 vim.keymap.set("n", "<leader>xw", function()
-	require("trouble").toggle("workspace_diagnostics")
+  require("trouble").toggle("workspace_diagnostics")
 end)
 vim.keymap.set("n", "<leader>xd", function()
-	require("trouble").toggle("document_diagnostics")
+  require("trouble").toggle("document_diagnostics")
 end)
 vim.keymap.set("n", "<leader>xq", function()
-	require("trouble").toggle("quickfix")
+  require("trouble").toggle("quickfix")
 end)
 vim.keymap.set("n", "<leader>xl", function()
-	require("trouble").toggle("loclist")
+  require("trouble").toggle("loclist")
 end)
 vim.keymap.set("n", "gR", function()
-	require("trouble").toggle("lsp_references")
+  require("trouble").toggle("lsp_references")
 end)
 vim.keymap.set("n", "<C-n>", ":Neotree filesystem reveal left<CR>", {})
 vim.keymap.set("n", "<leader>bf", ":Neotree buffers reveal float<CR>", {})
@@ -57,10 +63,10 @@ vim.keymap.set("n", "<leader>P", '"+P') -- paste before cursor
 
 vim.keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
 
-vim.keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" }) -- open new tab
-vim.keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" }) -- close current tab
-vim.keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to next tab
-vim.keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) --  go to previous tab
+vim.keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" })                     -- open new tab
+vim.keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" })              -- close current tab
+vim.keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" })                     --  go to next tab
+vim.keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" })                 --  go to previous tab
 vim.keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
 
 -- Exit insert mode without hitting Esc
