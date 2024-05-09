@@ -68,3 +68,4 @@ eval "$(pyenv init -)"
 
 source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOMEBREW_PREFIX/share/zsh-you-should-use/you-should-use.plugin.zsh
+source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zshautosuggestions.zsh
