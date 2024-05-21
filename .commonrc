@@ -1,6 +1,4 @@
-
 alias vim='nvim'
-alias ls='colorls'
 alias tf=terraform
 
 alias kunhealthy="kgpwide -A | egrep -v 'Completed|1/1|2/2|3/3|4/4|5/5|6/6|7/7'  | tee >&2 | wc -l"
