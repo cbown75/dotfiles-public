@@ -1,19 +1,8 @@
 export PATH=/opt/homebrew:/opt/homebrew/bin:$HOME/bin:/usr/local/sbin:/usr/local/bin:$PATH
 
-source ~/.commonrc
-#source ~/.warpcli
-if [ -r ~/.sshrc ]; then
-  source ~/.sshrc
-fi
-if [ -r ~/.private/.cloudflarerc ]; then 
-  source ~/.private/.cloudflarerc
-fi
-if [ -r ~/.private/.spaceliftrc ]; then
-  source ~/.private/.spaceliftrc
-fi
-if [ -f ~/.private/.updaterrc ]; then
-  source ~/.private/.updaterrc
-fi
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -27,8 +16,8 @@ export HOMEBREW_PREFIX=$(brew --prefix)
 
 # history setup
 HISTFILE=$HOME/.zhistory
-SAVEHIST=1000
-HISTSIZE=999
+#SAVEHIST=1000
+#HISTSIZE=999
 setopt share_history
 setopt hist_expire_dups_first
 setopt hist_ignore_dups
@@ -48,7 +37,7 @@ zstyle ':omz:update' frequency 7
 
 ENABLE_CORRECTION="true"
 
-plugins=( pass terraform kubectl docker golang screen history ssh-agent kube-ps1 aws gcloud )
+plugins=( pass terraform kubectl docker golang screen history ssh-agent kube-ps1 aws )
 if ! [[ "$HOME" =~ "^/pass" ]] ; then
 	plugins+=(git git-prompt)
 fi
@@ -59,12 +48,22 @@ source $ZSH/oh-my-zsh.sh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+source ~/.commonrc
+#source ~/.warpcli
+if [ -r ~/.sshrc ]; then
+  source ~/.sshrc
+fi
+if [ -r ~/.private/.cloudflarerc ]; then 
+  source ~/.private/.cloudflarerc
+fi
+if [ -r ~/.private/.spaceliftrc ]; then
+  source ~/.private/.spaceliftrc
+fi
+if [ -f ~/.private/.rprc ]; then
+  source ~/.private/.rprc
+fi
 
 source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOMEBREW_PREFIX/share/zsh-you-should-use/you-should-use.plugin.zsh

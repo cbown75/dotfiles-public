@@ -20,3 +20,6 @@ alias cddp='cd ~/.dotfiles-public'
 alias brews='brew update && brew bundle -v --file ~/Brewfile && brew upgrade && brew cleanup'
 
 alias goodmorning='brews && cdd && gl && cdt && gl && cddp && gl && cdk && gl && cdg'
+
+alias ls='eza -la --git --icons'
+alias lt='eza --tree --level=2 --long --icons --git'
