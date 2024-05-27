@@ -16,12 +16,16 @@ export HOMEBREW_PREFIX=$(brew --prefix)
 
 # history setup
 HISTFILE=$HOME/.zhistory
-#SAVEHIST=1000
-#HISTSIZE=999
-setopt share_history
-setopt hist_expire_dups_first
+HISTSIZE=10000
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
 setopt hist_ignore_dups
-setopt hist_verify
+setopt hist_find_no_dups
 
 setopt autocd
 
@@ -65,6 +69,12 @@ if [ -f ~/.private/.rprc ]; then
   source ~/.private/.rprc
 fi
 
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+  autoload -Uz compinit
+  compinit
+fi
+source $HOMEBREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOMEBREW_PREFIX/share/zsh-you-should-use/you-should-use.plugin.zsh
 source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
