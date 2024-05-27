@@ -74,7 +74,7 @@ source $ZSH/oh-my-zsh.sh
 zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 zstyle ':omz:update' frequency 7
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -la --git --icons $realpath'
 
 
 source ~/.commonrc
