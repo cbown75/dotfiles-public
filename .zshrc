@@ -93,3 +93,4 @@ if [ -f ~/.private/.rprc ]; then
 fi
 
 eval "$(fzf --zsh)"
+eval "$(zoxide init --cmd cd zsh)"
