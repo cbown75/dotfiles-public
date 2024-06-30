@@ -42,3 +42,8 @@ luac.out
 # Lazy
 lazy-lock.json
 lazyvim.json
+bin/app/Command
+bin/app/App.php
+bin/vendor
+bin/.DS_Store
+bin/rp
