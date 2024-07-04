@@ -1,4 +1,8 @@
-export PATH=/opt/homebrew:/opt/homebrew/bin:$HOME/bin:/usr/local/sbin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:/usr/local/sbin:/usr/local/bin:$PATH
+
+if [[ -d /opt/homebrew ]]; then
+  export PATH=/opt/homebrew:/opt/homebrew/bin:$PATH
+fi
 
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
@@ -33,8 +37,9 @@ if [[ ! -d ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-autosuggestion
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-autosuggestions
 fi
 
-
-export HOMEBREW_PREFIX=$(brew --prefix)
+if [[ -d /opt/homebrew ]]; then
+  export HOMEBREW_PREFIX=$(brew --prefix)
+fi
 
 # history setup
 HISTFILE=$HOME/.zhistory
