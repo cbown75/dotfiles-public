@@ -41,6 +41,8 @@ if [[ ! -d ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-autosuggestion
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-autosuggestions
 fi
 
+export KUEBCONFIG="~/.kube/config"
+
 # history setup
 HISTFILE=$HOME/.zhistory
 HISTSIZE=10000
