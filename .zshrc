@@ -8,10 +8,6 @@ fi
 
 export PATH=$HOME/bin:/usr/local/sbin:/usr/local/bin:$PATH
 
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -83,7 +79,6 @@ zstyle ':omz:update' frequency 7
 zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -la --git --icons $realpath'
 
-
 source ~/.commonrc
 #source ~/.warpcli
 if [ -r ~/.sshrc ]; then
@@ -98,6 +93,10 @@ fi
 if [ -f ~/.private/.rprc ]; then
   source ~/.private/.rprc
 fi
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
 
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
