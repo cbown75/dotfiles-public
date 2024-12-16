@@ -4,6 +4,12 @@ km.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 km.set("n", "<Leader>u", ":Lazy update<CR>", { desc = "Lazy Update (Sync)" })
 
+km.set("n", "<leader>xu", ":UndotreeToggle<cr>", { desc = "Undo Tree" })
+
+
+--nav buddy
+km.set({ "n" }, "<leader>xb", ":lua require('nvim-navbuddy').open()<cr>", { desc = "Nav Buddy" })
+
 -- Diagnostic keymaps
 km.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
 km.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
