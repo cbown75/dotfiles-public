@@ -63,7 +63,7 @@ CASE_SENSITIVE="true"
 
 ENABLE_CORRECTION="true"
 
-plugins=( pass screen ssh-agent fzf-tab you-should-use zsh-syntax-highlighting zsh-autosuggestions)
+plugins=( pass screen ssh-agent fzf-tab you-should-use zsh-syntax-highlighting zsh-autosuggestions direnv)
 if ! [[ "$HOME" =~ "^/pass" ]] ; then
 	plugins+=(git git-prompt)
 fi
