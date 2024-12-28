@@ -1,0 +1,8 @@
+theme = Dracula+
+background-opacity = 0.7
+unfocused-split-opacity = 0.5
+
+macos-titlebar-proxy-icon = hidden
+macos-titlebar-style = hidden
+
+mouse-hide-while-typing = false
