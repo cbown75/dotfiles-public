@@ -1,1 +1,3 @@
-return { "tpope/vim-projectionist" }
+return {
+  "tpope/vim-projectionist"
+}

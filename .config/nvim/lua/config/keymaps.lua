@@ -23,21 +23,6 @@ km.set("n", "<right>", '<cmd>echo "Use l to move!!"<CR>')
 km.set("n", "<up>", '<cmd>echo "Use k to move!!"<CR>')
 km.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 
--- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
---
---  See `:help wincmd` for a list of all window commands
---km.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
---km.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
---km.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
---km.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
-
---  See `:help wincmd` for a list of all window commands
---km.set("n", "<C-h>", ":wincmd h<CR>", { desc = "Move focus to the left window" })
---km.set("n", "<C-l>", ":wincmd l<CR>", { desc = "Move focus to the right window" })
---km.set("n", "<C-j>", ":wincmd j<CR>", { desc = "Move focus to the lower window" })
---km.set("n", "<C-k>", ":wincmd k<CR>", { desc = "Move focus to the upper window" })
-
 km.set("n", "<leader>xx", function()
   require("trouble").toggle()
 end)
