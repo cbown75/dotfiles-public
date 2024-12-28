@@ -30,14 +30,14 @@ return {
           "docker_compose_language_service",
           "gopls",
           "helm_ls",
-          "html",
+          --"html",
           "jsonls",
           "jqls",
           "lua_ls",
           "marksman",
           --"nil_ls",
-          "pyright",
-          "sqlls",
+          "pylsp",
+          "ruff",
           "tflint",
           'terraformls',
           "yamlls",
@@ -61,6 +61,9 @@ return {
         capabilities = capabilities,
       })
       lspconfig.lua_ls.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.pylsp.setup({
         capabilities = capabilities,
       })
 
