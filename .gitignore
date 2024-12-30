@@ -47,3 +47,6 @@ bin/app/App.php
 bin/vendor
 bin/.DS_Store
 bin/rp
+node_modules
+package-lock.json
+package.json
