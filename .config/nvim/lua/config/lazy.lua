@@ -35,6 +35,6 @@ require("lazy").setup({
 		-- set to `nil` to use hererocks when luarocks is not found
 		-- set to `true` to always use hererocks
 		-- set to `false` to always use luarocks
-		hererocks = true,
+		hererocks = false,
 	},
 })
