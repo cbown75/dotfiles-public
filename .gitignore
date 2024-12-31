@@ -50,3 +50,4 @@ bin/rp
 node_modules
 package-lock.json
 package.json
+.config/tmux/plugins
