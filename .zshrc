@@ -6,7 +6,7 @@ if [[ -d "/opt/homebrew/bin" ]]; then
   export PATH=/opt/homebrew/bin:$PATH && export HOMEBREW_PREFIX=$(brew --prefix)
 fi
 
-export PATH=$HOME/bin:/usr/local/sbin:/usr/local/bin:$HOME/.cargo/bin:/opt/homebrew/opt/openjdk/bin:$PATH
+export PATH=$HOME/bin:/usr/local/sbin:/usr/local/bin:/opt/homebrew/opt/php@7.4/bin:$HOME/.cargo/bin:/opt/homebrew/opt/openjdk/bin:$PATH
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -100,3 +100,9 @@ eval "$(pyenv init -)"
 
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
+
+PATH="/Users/cbown/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/Users/cbown/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/Users/cbown/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/Users/cbown/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/cbown/perl5"; export PERL_MM_OPT;
