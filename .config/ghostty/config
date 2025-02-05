@@ -7,4 +7,3 @@ macos-titlebar-style = hidden
 
 mouse-hide-while-typing = false
 
-TERM=xterm-256color
