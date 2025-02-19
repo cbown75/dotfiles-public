@@ -20,11 +20,11 @@ return {
 			require("none-ls.formatting.ruff").with({ extra_args = { "--extend-select", "I" } }),
 			require("none-ls.formatting.ruff_format"),
 			null_ls.builtins.formatting.stylua,
-			null_ls.builtins.formatting.prettier.with({ filretypes = { "json", "yaml", "markdown" } }),
+			null_ls.builtins.formatting.prettierd.with({ filretypes = { "json", "markdown", "yaml", "css", "html" } }),
 			--null_ls.builtins.diagnostics.erb_lint,
 			--null_ls.builtins.diagnostics.rubocop,
 			--null_ls.builtins.formatting.rubocop,
-			null_ls.builtins.formatting.shfmt.with({ args = { "-i", "4" } }),
+			--null_ls.builtins.formatting.shfmt.with({ args = { "-i", "4" } }),
 		}
 
 		local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
@@ -37,7 +37,7 @@ return {
 						group = augroup,
 						buffer = bufnr,
 						callback = function()
-							vim.lsp.buf.formatting_sync()
+							vim.lsp.buf.format()
 						end,
 					})
 				end
