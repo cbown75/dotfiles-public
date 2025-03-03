@@ -90,10 +90,6 @@ if [ -f ~/.private/.rprc ]; then
   source ~/.private/.rprc
 fi
 
-function get_anthropic_key() {
-  security find-generic-password -s 'anthropic_api_key' -w 2>/dev/null
-}
-
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
