@@ -6,7 +6,7 @@ if [[ -d "/opt/homebrew/bin" ]]; then
   export PATH=/opt/homebrew/bin:$PATH && export HOMEBREW_PREFIX=$(brew --prefix)
 fi
 
-export PATH=$HOME/bin:/usr/local/sbin:/usr/local/bin:/opt/homebrew/opt/php@7.4/bin:$HOME/.cargo/bin:/opt/homebrew/opt/openjdk/bin:$PATH
+export PATH=$HOME/bin:/usr/local/sbin:/usr/local/bin:/opt/homebrew/opt/php@8.2/bin:$HOME/.cargo/bin:/opt/homebrew/opt/openjdk/bin:$PATH
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -75,8 +75,7 @@ zstyle ':omz:update' frequency 7
 zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -la --git --icons $realpath'
 
-source ~/.commonrc
-#source ~/.warpcli
+source ~/.rc/.commonrc
 if [ -r ~/.sshrc ]; then
   source ~/.sshrc
 fi
@@ -88,6 +87,9 @@ if [ -r ~/.private/.spaceliftrc ]; then
 fi
 if [ -f ~/.private/.rprc ]; then
   source ~/.private/.rprc
+fi
+if [ -f ~/.rc/.fabricrc ]; then
+  source ~/.rc/.fabricrc
 fi
 
 export PYENV_ROOT="$HOME/.pyenv"

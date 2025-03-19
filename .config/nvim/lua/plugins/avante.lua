@@ -11,11 +11,32 @@ return {
     version = "*",
     lazy = false,
     keys = {
-      { "<leader>aa", "<cmd>AvanteChatNew<CR>",                             desc = "New Avante Chat" },
-      { "<leader>at", "<cmd>AvanteToggle<CR>",                              desc = "Toggle Avante" },
-      { "<leader>as", function() require("avante").selection() end,         desc = "Ask Avante about selection",    mode = { "v" } },
-      { "<leader>ai", function() require("avante").improve_selection() end, desc = "Improve selection with Avante", mode = { "v" } },
-      { "<leader>ae", function() require("avante").explain_selection() end, desc = "Explain selection with Avante", mode = { "v" } },
+      { "<leader>aa", "<cmd>avantechatnew<cr>", desc = "new avante chat" },
+      { "<leader>at", "<cmd>avantetoggle<cr>",  desc = "toggle avante" },
+      {
+        "<leader>as",
+        function()
+          require("avante").selection()
+        end,
+        desc = "ask avante about selection",
+        mode = { "v" },
+      },
+      {
+        "<leader>ai",
+        function()
+          require("avante").improve_selection()
+        end,
+        desc = "improve selection with avante",
+        mode = { "v" },
+      },
+      {
+        "<leader>ae",
+        function()
+          require("avante").explain_selection()
+        end,
+        desc = "explain selection with avante",
+        mode = { "v" },
+      },
     },
     init = function()
       -- Get API key once to avoid multiple system calls
@@ -44,12 +65,12 @@ return {
       require("avante").setup({
         anthropic_api_key = api_key,
         -- Current model as of March 2025
-        model = "claude-3-5-sonnet-20240229",
+        model = "claude-3-7-sonnet-20250219",
         system_message = [[You are Claude, a helpful AI assistant created by Anthropic.
         You excel at programming, especially in Neovim and Lua.
         When asked coding questions, you provide clear, concise code with explanations.
         You help users improve their workflow, fix bugs, and implement new features.]],
       })
-    end
-  }
+    end,
+  },
 }
