@@ -1,3 +1,4 @@
+obsidian_base="/Users/cbown/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian"
 # Loop through all files in the ~/.config/fabric/patterns directory
 for pattern_file in $HOME/.config/fabric/patterns/*; do
     # Get the base name of the file (i.e., remove the directory path)
