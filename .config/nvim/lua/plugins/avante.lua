@@ -10,34 +10,6 @@ return {
     build = "make",
     version = "*",
     lazy = false,
-    keys = {
-      { "<leader>aa", "<cmd>avantechatnew<cr>", desc = "new avante chat" },
-      { "<leader>at", "<cmd>avantetoggle<cr>",  desc = "toggle avante" },
-      {
-        "<leader>as",
-        function()
-          require("avante").selection()
-        end,
-        desc = "ask avante about selection",
-        mode = { "v" },
-      },
-      {
-        "<leader>ai",
-        function()
-          require("avante").improve_selection()
-        end,
-        desc = "improve selection with avante",
-        mode = { "v" },
-      },
-      {
-        "<leader>ae",
-        function()
-          require("avante").explain_selection()
-        end,
-        desc = "explain selection with avante",
-        mode = { "v" },
-      },
-    },
     init = function()
       -- Get API key once to avoid multiple system calls
       local api_key_cmd = "security find-generic-password -s 'anthropic_api_key' -w 2>/dev/null"
