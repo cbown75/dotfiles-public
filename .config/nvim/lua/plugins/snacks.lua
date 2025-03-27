@@ -1,4 +1,3 @@
--- stylua: ignore
 return {
   "folke/snacks.nvim",
   priority = 1000,
@@ -14,7 +13,11 @@ return {
       timeout = 3000,
     },
     quickfile = { enabled = true },
-    scroll = { enabled = true },
+    scroll = {
+      enabled = true,
+      update_interval = 300, -- Increased from default to reduce scroll updates frequency
+      threshold = 5,         -- Only update after scrolling 5 lines to reduce frequency
+    },
     statuscolumn = { enabled = true },
     words = { enabled = true },
     styles = {
@@ -36,19 +39,41 @@ return {
         end
         vim.print = _G.dd -- Override print to use snacks for `:=` command
 
-        -- Create some toggle mappings
-        Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
-        Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
-        Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
-        Snacks.toggle.diagnostics():map("<leader>ud")
-        Snacks.toggle.line_number():map("<leader>ul")
-        Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map(
-          "<leader>uc")
-        Snacks.toggle.treesitter():map("<leader>uT")
-        Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map("<leader>ub")
-        Snacks.toggle.inlay_hints():map("<leader>uh")
-        Snacks.toggle.indent():map("<leader>ug")
-        Snacks.toggle.dim():map("<leader>uD")
+        -- Setup global toggle functions that will be mapped in keymaps.lua
+        _G.toggle_spelling = Snacks.toggle.option("spell", { name = "Spelling" })
+        _G.toggle_wrap = Snacks.toggle.option("wrap", { name = "Wrap" })
+        _G.toggle_relative_number = Snacks.toggle.option("relativenumber", { name = "Relative Number" })
+        _G.toggle_diagnostics = Snacks.toggle.diagnostics()
+        _G.toggle_line_number = Snacks.toggle.line_number()
+        _G.toggle_conceal = Snacks.toggle.option("conceallevel",
+          { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
+        _G.toggle_treesitter = Snacks.toggle.treesitter()
+        _G.toggle_background = Snacks.toggle.option("background",
+          { off = "light", on = "dark", name = "Dark Background" })
+        _G.toggle_inlay_hints = Snacks.toggle.inlay_hints()
+        _G.toggle_indent = Snacks.toggle.indent()
+        _G.toggle_dim = Snacks.toggle.dim()
+      end,
+    })
+
+    -- Create a global scroll detection system for other plugins to use
+    _G.scroll_state = {
+      is_scrolling = false,
+      timer = vim.loop.new_timer(),
+    }
+
+    vim.api.nvim_create_autocmd("CursorMoved", {
+      callback = function()
+        _G.scroll_state.is_scrolling = true
+
+        if _G.scroll_state.timer then
+          _G.scroll_state.timer:stop()
+        end
+
+        _G.scroll_state.timer:start(300, 0, vim.schedule_wrap(function()
+          _G.scroll_state.is_scrolling = false
+          vim.cmd("redrawstatus")
+        end))
       end,
     })
   end,

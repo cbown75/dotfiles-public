@@ -99,6 +99,14 @@ km.set("n", "<leader>w+", ":resize +5<CR>", { desc = "Increase window height" })
 km.set("n", "<leader>w-", ":resize -5<CR>", { desc = "Decrease window height" })
 km.set("n", "<leader>w>", ":vertical resize +5<CR>", { desc = "Increase window width" })
 km.set("n", "<leader>w<", ":vertical resize -5<CR>", { desc = "Decrease window width" })
+km.set("n", "<leader>ww", function()
+  require("which-key").show({
+    keys = "<c-w>",
+    mode = "n",
+    auto = false,
+    loop = true,
+  })
+end, { desc = "Window hydra mode" })
 
 -- Code operations
 km.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
@@ -198,9 +206,6 @@ end, { desc = "Select Scratch Buffer" })
 km.set("n", "<leader>n", function()
   require("snacks").notifier.show_history()
 end, { desc = "Notification History" })
-km.set("n", "<leader>un", function()
-  require("snacks").notifier.hide()
-end, { desc = "Dismiss Notifications" })
 km.set("n", "<leader>N", function()
   require("snacks").win({
     file = vim.api.nvim_get_runtime_file("doc/news.txt", false)[1],
@@ -216,43 +221,21 @@ km.set("n", "<leader>N", function()
   })
 end, { desc = "Neovim News" })
 
--- UI toggles
-km.set("n", "<leader>us", function()
-  require("snacks").toggle.option("spell", { name = "Spelling" })()
-end, { desc = "Toggle spelling" })
-km.set("n", "<leader>uw", function()
-  require("snacks").toggle.option("wrap", { name = "Wrap" })()
-end, { desc = "Toggle word wrap" })
-km.set("n", "<leader>uL", function()
-  require("snacks").toggle.option("relativenumber", { name = "Relative Number" })()
-end, { desc = "Toggle relative numbers" })
-km.set("n", "<leader>ud", function()
-  require("snacks").toggle.diagnostics()()
-end, { desc = "Toggle diagnostics" })
-km.set("n", "<leader>ul", function()
-  require("snacks").toggle.line_number()()
-end, { desc = "Toggle line numbers" })
-km.set("n", "<leader>uc", function()
-  require("snacks").toggle.option(
-    "conceallevel",
-    { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }
-  )()
-end, { desc = "Toggle conceal" })
-km.set("n", "<leader>uT", function()
-  require("snacks").toggle.treesitter()()
-end, { desc = "Toggle treesitter" })
-km.set("n", "<leader>ub", function()
-  require("snacks").toggle.option("background", { off = "light", on = "dark", name = "Dark Background" })()
-end, { desc = "Toggle background" })
-km.set("n", "<leader>uh", function()
-  require("snacks").toggle.inlay_hints()()
-end, { desc = "Toggle inlay hints" })
-km.set("n", "<leader>ug", function()
-  require("snacks").toggle.indent()()
-end, { desc = "Toggle indent guides" })
-km.set("n", "<leader>uD", function()
-  require("snacks").toggle.dim()()
-end, { desc = "Toggle dim mode" })
+-- UI toggles using globally defined toggle functions from snacks.lua
+km.set("n", "<leader>us", function() _G.toggle_spelling() end, { desc = "Toggle spelling" })
+km.set("n", "<leader>uw", function() _G.toggle_wrap() end, { desc = "Toggle word wrap" })
+km.set("n", "<leader>uL", function() _G.toggle_relative_number() end, { desc = "Toggle relative numbers" })
+km.set("n", "<leader>ud", function() _G.toggle_diagnostics() end, { desc = "Toggle diagnostics" })
+km.set("n", "<leader>ul", function() _G.toggle_line_number() end, { desc = "Toggle line numbers" })
+km.set("n", "<leader>uc", function() _G.toggle_conceal() end, { desc = "Toggle conceal" })
+km.set("n", "<leader>uT", function() _G.toggle_treesitter() end, { desc = "Toggle treesitter" })
+km.set("n", "<leader>ub", function() _G.toggle_background() end, { desc = "Toggle background" })
+km.set("n", "<leader>uh", function() _G.toggle_inlay_hints() end, { desc = "Toggle inlay hints" })
+km.set("n", "<leader>ug", function() _G.toggle_indent() end, { desc = "Toggle indent guides" })
+km.set("n", "<leader>uD", function() _G.toggle_dim() end, { desc = "Toggle dim mode" })
+km.set("n", "<leader>un", function()
+  require("snacks").notifier.hide()
+end, { desc = "Dismiss Notifications" })
 km.set("n", "<leader>uC", "<cmd>Telescope colors<CR>", { desc = "Color picker" })
 
 -- Avante AI (Claude) Integration
@@ -309,3 +292,8 @@ end, { desc = "Insert Date" })
 
 -- Lazy update/sync
 km.set("n", "<leader>lu", ":Lazy update<CR>", { desc = "Lazy Update (Sync)" })
+
+-- Show buffer local keymaps in which-key
+km.set("n", "<leader>?", function()
+  require("which-key").show({ global = false })
+end, { desc = "Buffer Local Keymaps (which-key)" })
