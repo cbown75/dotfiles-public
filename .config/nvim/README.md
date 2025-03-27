@@ -10,6 +10,7 @@ A comprehensive and modular Neovim configuration with carefully selected plugins
 - [Keymaps](#keymaps)
 - [Options](#options)
 - [Features](#features)
+- [Recent Improvements](#recent-improvements)
 
 ## Installation
 
@@ -46,6 +47,8 @@ The configuration uses [Lazy.nvim](https://github.com/folke/lazy.nvim) as the pl
 | [ibhagwan/fzf-lua](https://github.com/ibhagwan/fzf-lua)                       | Fuzzy finder integration          |
 | [nvim-lualine/lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)     | Status line                       |
 | [nvim-tree/nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) | Icons for UI elements             |
+| [ThePrimeagen/harpoon](https://github.com/ThePrimeagen/harpoon)               | Quick file navigation             |
+| [folke/flash.nvim](https://github.com/folke/flash.nvim)                       | Enhanced motion and navigation    |
 
 ### AI Integration
 
@@ -154,6 +157,34 @@ Keymaps are centralized in `config/keymaps.lua` to avoid conflicts and make them
 | `<leader>gd` | Normal |        | Go to definition       |
 | `<leader>gr` | Normal |        | Go to references       |
 | `<leader>mp` | Normal |        | Format with conform    |
+
+### Harpoon File Navigation
+
+| Key          | Mode   | Action | Description           |
+| ------------ | ------ | ------ | --------------------- |
+| `<leader>ha` | Normal |        | Add file to harpoon   |
+| `<leader>he` | Normal |        | View harpoon menu     |
+| `<leader>h1` | Normal |        | Jump to harpoon 1     |
+| `<leader>h2` | Normal |        | Jump to harpoon 2     |
+| `<leader>h3` | Normal |        | Jump to harpoon 3     |
+| `<leader>h4` | Normal |        | Jump to harpoon 4     |
+| `<A-j>`      | Normal |        | Next harpoon file     |
+| `<A-k>`      | Normal |        | Previous harpoon file |
+| `<leader>hf` | Normal |        | Find harpoon files    |
+
+### Flash.nvim Navigation
+
+| Key          | Mode             | Description                 |
+| ------------ | ---------------- | --------------------------- |
+| `s`          | Normal,Visual,Op | Flash jump anywhere         |
+| `S`          | Normal,Visual,Op | Jump to treesitter node     |
+| `r`          | Operator         | Remote flash operation      |
+| `R`          | Operator,Visual  | Treesitter search           |
+| `<leader>js` | Normal           | Jump to line start          |
+| `<leader>je` | Normal           | Jump to line end            |
+| `<leader>jw` | Normal           | Jump to exact word          |
+| `<leader>jf` | Normal           | Jump to function definition |
+| `<leader>jc` | Normal           | Jump to comment             |
 
 ### AI Assistant (Claude)
 
@@ -267,6 +298,15 @@ The status line is configured using Lualine with several custom components:
 - Scroll position indicator
 - Custom styling and separators
 
+### Snippet Management
+
+Custom snippets are stored in `~/git/snippets/` and organized by filetype:
+
+- Use `:SnippetEdit` to create/edit snippets for the current filetype
+- Use `:SnippetEdit <filetype>` for a specific language
+- Snippet navigation with `<C-k>` to expand/jump forward and `<C-j>` to jump backward
+- Language-specific snippets for Lua, Go, Terraform, Helm, and Rust
+
 ## Features
 
 ### Language Server Protocol (LSP)
@@ -295,3 +335,46 @@ The status line is configured using Lualine with several custom components:
 - [Avante](https://github.com/yetone/avante.nvim) for Claude AI assistant integration
 - Visual mode selections for code improvement, explanation, and assistance
 - Dedicated keybindings for AI interactions
+
+### Project-Specific Settings
+
+- Supports per-project configuration via `.nvim.lua` files in project roots
+- Automatically applies project-specific settings when opening files
+- Allows custom formatters, linters, and keymaps per project
+
+## Recent Improvements
+
+### Performance Optimizations
+
+- **Improved Scrolling Performance**: Optimized Lualine with caching and scroll detection
+- **Reduced CPU Usage**: Removed CPU monitoring from status line
+- **Enhanced Autocommands**: Reorganized autocommands with better grouping and descriptions
+- **Smart Formatting**: Added quiet format-on-save with formatter availability detection
+
+### Navigation Enhancements
+
+- **Harpoon Integration**: Quick navigation between frequently used files
+- **Flash.nvim Configuration**: Enhanced motions for faster code navigation
+- **Custom Jump Commands**: Special jumps to line start/end, functions, and comments
+
+### Productivity Features
+
+- **Custom Snippet System**:
+
+  - Snippets stored in git repository for version control
+  - Organized by language with tailored snippets for Go, Terraform, Helm, and Rust
+  - Easy editing via `:SnippetEdit` command
+
+- **Project Settings**:
+  - Project-specific configurations via `.nvim.lua` files
+  - Supports custom LSP settings, formatters, and keymaps per project
+
+### UI Improvements
+
+- **Which-Key Enhancements**: Better organization and visual indicators for keymaps
+- **Icon Integration**: Comprehensive icons for different types of operations
+- **Enhanced Statusline**: Optimized statusline with smart component updates
+
+### Upcoming Improvements
+
+See the [Neovim Configuration Improvements](~/git/nvim-improvements.md) document for upcoming enhancements.
