@@ -10,6 +10,7 @@ A comprehensive and modular Neovim configuration with carefully selected plugins
 - [Keymaps](#keymaps)
 - [Options](#options)
 - [Features](#features)
+- [K9s Integration](#k9s-integration)
 - [Recent Improvements](#recent-improvements)
 
 ## Installation
@@ -107,6 +108,13 @@ The configuration uses [Lazy.nvim](https://github.com/folke/lazy.nvim) as the pl
 | [mfussenegger/nvim-dap](https://github.com/mfussenegger/nvim-dap) | Debug Adapter Protocol client |
 | [rcarriga/nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)   | UI for nvim-dap               |
 
+### DevOps Integrations
+
+| Plugin                                                  | Description                    |
+| ------------------------------------------------------- | ------------------------------ |
+| Custom K9s Integration                                  | Kubernetes management with K9s |
+| [nathom/tmux.nvim](https://github.com/nathom/tmux.nvim) | Enhanced Tmux integration      |
+
 ## Keymaps
 
 Keymaps are centralized in `config/keymaps.lua` to avoid conflicts and make them easier to discover and maintain.
@@ -135,6 +143,25 @@ Keymaps are centralized in `config/keymaps.lua` to avoid conflicts and make them
 | `<leader>fk` | Normal |        | Find keymaps                   |
 | `<leader>/`  | Normal |        | Fuzzy search in current buffer |
 | `<leader>fb` | Normal |        | Find open buffers              |
+
+### K9s and Kubernetes Operations
+
+| Key           | Mode   | Action | Description                       |
+| ------------- | ------ | ------ | --------------------------------- |
+| `<leader>k9`  | Normal |        | Launch K9s                        |
+| `<leader>k9v` | Normal |        | Launch K9s in vertical split      |
+| `<leader>k9h` | Normal |        | Launch K9s in horizontal split    |
+| `<leader>kc`  | Normal |        | Change Kubernetes context         |
+| `<leader>kn`  | Normal |        | Change Kubernetes namespace       |
+| `<leader>kp`  | Normal |        | View pods in K9s                  |
+| `<leader>kd`  | Normal |        | View deployments in K9s           |
+| `<leader>ks`  | Normal |        | View services in K9s              |
+| `<leader>kl`  | Normal |        | View logs for resource            |
+| `<leader>kL`  | Normal |        | View logs for resource in file    |
+| `<leader>kf`  | Normal |        | Port forward service from file    |
+| `<leader>ka`  | Normal |        | Apply current k8s manifest        |
+| `<leader>kD`  | Normal |        | Delete resource from current file |
+| `<leader>kg`  | Normal |        | Generate kubernetes YAML template |
 
 ### Buffer Operations
 
@@ -342,6 +369,55 @@ Custom snippets are stored in `~/git/snippets/` and organized by filetype:
 - Automatically applies project-specific settings when opening files
 - Allows custom formatters, linters, and keymaps per project
 
+## K9s Integration
+
+The K9s integration provides a seamless DevOps workflow between Neovim and Kubernetes.
+
+### Features
+
+- Launch K9s directly from Neovim with context awareness
+- Intelligent split views for code editing and cluster management
+- Execute Kubernetes operations on resources from the current file
+- Automatic context and namespace detection
+- View logs in a split window
+- Port forwarding for services
+- Apply, delete, and scale resources directly from manifest files
+
+### Commands
+
+- `:K9s` - Launch K9s with current context and namespace
+- `:K9s context` or `:K9s ctx` - Select a context and launch K9s
+- `:K9s namespace` or `:K9s ns` - Select a namespace and launch K9s
+- `:K9s file` or `:K9s f` - Parse current file and launch K9s for that resource
+- `:K9s pods|deployments|services|...` - Launch K9s focused on specific resource type
+- `:K9sLogs [resource-type/name]` - Display and follow logs for a resource
+
+### Kubernetes Snippets
+
+The package includes numerous snippets for Kubernetes resources:
+
+| Trigger          | Description                          |
+| ---------------- | ------------------------------------ |
+| `kdeployment`    | Create a deployment                  |
+| `kservice`       | Create a service                     |
+| `kconfigmap`     | Create a configmap                   |
+| `ksecret`        | Create a secret                      |
+| `kingress`       | Create an ingress                    |
+| `kstatefulset`   | Create a statefulset                 |
+| `kpvc`           | Create a persistent volume claim     |
+| `kjob`           | Create a job                         |
+| `kcronjob`       | Create a cronjob                     |
+| `knamespace`     | Create a namespace                   |
+| `kcontainer`     | Add a container to a pod template    |
+| `kenv`           | Add environment variables            |
+| `kvolume`        | Add a volume                         |
+| `kvolumemount`   | Add a volume mount                   |
+| `klivenessprobe` | Add a liveness probe                 |
+| `khpa`           | Create a horizontal pod autoscaler   |
+| `knetworkpolicy` | Create a network policy              |
+| `kmetadata`      | Add a comprehensive metadata section |
+| `kclusterinfo`   | Insert current cluster context info  |
+
 ## Recent Improvements
 
 ### Performance Optimizations
@@ -356,6 +432,12 @@ Custom snippets are stored in `~/git/snippets/` and organized by filetype:
 - **Harpoon Integration**: Quick navigation between frequently used files
 - **Flash.nvim Configuration**: Enhanced motions for faster code navigation
 - **Custom Jump Commands**: Special jumps to line start/end, functions, and comments
+
+### DevOps Enhancements
+
+- **K9s Integration**: Seamless Kubernetes management from within Neovim
+- **Kubernetes Snippets**: Context-aware snippets for faster authoring of K8s resources
+- **Enhanced TMUX Integration**: Better terminal handling for DevOps workflows
 
 ### Productivity Features
 
