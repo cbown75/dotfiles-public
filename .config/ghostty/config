@@ -7,3 +7,6 @@ macos-titlebar-style = hidden
 
 mouse-hide-while-typing = false
 
+clipboard-read = system
+clipboard-write = system
+enable-osc52 = true 

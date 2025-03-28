@@ -94,7 +94,6 @@ km.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up and center" })
 km.set("n", "n", "nzzzv", { desc = "Next search result and center" })
 km.set("n", "N", "Nzzzv", { desc = "Previous search result and center" })
 
--- Clipboard operations
 km.set({ "n", "v" }, "<leader>y", '"+y', { desc = "Yank to system clipboard" })
 km.set({ "n", "v" }, "<leader>Y", '"+Y', { desc = "Yank line to system clipboard" })
 km.set({ "n", "v" }, "<leader>d", '"+d', { desc = "Delete to system clipboard" })
