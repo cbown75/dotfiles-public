@@ -1,7 +1,7 @@
 local km = vim.keymap
 
 require("config.keymaps.devops")
-
+require("config.keymaps.kubernetes")
 -- Clear existing keymaps in specific modes
 -- Use this carefully as it removes ALL keymaps in the specified mode
 -- vim.api.nvim_set_keymap('n', '', '', { noremap = true })
