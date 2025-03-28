@@ -19,23 +19,23 @@ return {
 			--
 			--			},
 			-- Improve navigation between panes
-			navigation = {
-				-- Enable cycling through panes
-				cycle_navigation = true,
-				-- Enable navigation in copy-mode
-				enable_default_keybindings = false,
-				-- Prevents tmux from wrapping back to top when reaching end of screen
-				persist_zoom = true,
-			},
-			-- Support tmux windows like Neovim tabs
-			resize = {
-				-- Enable resizing tmux panes from Neovim
-				enable_default_keybindings = false,
-				-- Resize amount for horizontal direction
-				resize_step_x = 5,
-				-- Resize amount for vertical direction
-				resize_step_y = 5,
-			},
+			--			navigation = {
+			--				-- Enable cycling through panes
+			--				cycle_navigation = true,
+			--				-- Enable navigation in copy-mode
+			--				enable_default_keybindings = false,
+			--				-- Prevents tmux from wrapping back to top when reaching end of screen
+			--				persist_zoom = true,
+			--			},
+			--			-- Support tmux windows like Neovim tabs
+			--			resize = {
+			--				-- Enable resizing tmux panes from Neovim
+			--				enable_default_keybindings = false,
+			--				-- Resize amount for horizontal direction
+			--				resize_step_x = 5,
+			--				-- Resize amount for vertical direction
+			--				resize_step_y = 5,
+			--			},
 		})
 	end,
 }
