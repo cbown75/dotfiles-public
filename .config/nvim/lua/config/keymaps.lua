@@ -543,10 +543,10 @@ km.set("n", "<leader>jf", function()
 			-- Create a pattern to match function definitions in different languages
 			local function_patterns = {
 				lua = "function%s+[%w_%.]+%s*%(", -- Lua: function name()
-				go = "func%s+[%w_]+%s*%(", -- Go: func Name(
+				go = "func%s+[%w_]+%s*%(",    -- Go: func Name(
 				python = "def%s+[%w_]+%s*%(", -- Python: def name(
-				rust = "fn%s+[%w_]+%s*%(", -- Rust: fn name(
-				terraform = "%w+%s*%{", -- Terraform: resource_type {
+				rust = "fn%s+[%w_]+%s*%(",    -- Rust: fn name(
+				terraform = "%w+%s*%{",       -- Terraform: resource_type {
 			}
 
 			-- Get the current filetype
