@@ -8,6 +8,7 @@ return {
 
 			configs.setup({
 				ensure_installed = {
+					-- Base languages
 					"javascript",
 					"typescript",
 					"c",
@@ -15,6 +16,8 @@ return {
 					"vim",
 					"vimdoc",
 					"query",
+
+					-- DevOps-focused languages
 					"elixir",
 					"erlang",
 					"heex",
@@ -32,6 +35,12 @@ return {
 					"ruby",
 					"markdown",
 					"java",
+
+					-- Add missing parsers from health check
+					"regex",
+					"yaml",
+					"hcl",
+					"python",
 				},
 				sync_install = false,
 				highlight = { enable = true },
