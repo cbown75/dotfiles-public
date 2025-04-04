@@ -8,7 +8,6 @@ return {
 
 			configs.setup({
 				ensure_installed = {
-					-- Base languages
 					"javascript",
 					"typescript",
 					"c",
@@ -16,14 +15,19 @@ return {
 					"vim",
 					"vimdoc",
 					"query",
-
-					-- DevOps-focused languages
 					"elixir",
 					"erlang",
 					"heex",
 					"eex",
 					"java",
 					"kotlin",
+					"latex",
+					"css",
+					"norg",
+					"scss",
+					"svelte",
+					"typst",
+					"vue",
 					"jq",
 					"dockerfile",
 					"json",
@@ -35,14 +39,13 @@ return {
 					"ruby",
 					"markdown",
 					"java",
-
-					-- Add missing parsers from health check
 					"regex",
 					"yaml",
 					"hcl",
 					"python",
 				},
 				sync_install = false,
+				auto_install = true,
 				highlight = { enable = true },
 				indent = { enable = true },
 				incremental_selection = {
