@@ -8,13 +8,13 @@ local modules = {
   "lsp",       -- LSP and diagnostics
   "git",       -- Git operations
   "ai",        -- AI assistant
-  "devops",    -- Overall DevOps functionality
-  "kubernetes", -- Kubernetes specific
-  "terraform", -- New dedicated terraform module
-  "docker",    -- New dedicated docker module
-  "aws",       -- New dedicated AWS module
-  "python",    -- New dedicated Python module
-  "tmux",      -- Terminal and tmux
+  "devops",    -- Overall DevOps functionality (using <leader>o prefix)
+  "kubernetes", -- Kubernetes specific (now under ok prefix)
+  "terraform", -- Terraform specific (now under ot prefix)
+  "docker",    -- Docker specific (now under od prefix)
+  "aws",       -- AWS specific (now under oa prefix)
+  "python",    -- Python specific (now under op prefix)
+  "tmux",      -- Terminal and tmux (reorganized)
 }
 
 -- Custom require function to safely load modules
@@ -32,6 +32,15 @@ function M.setup()
   for _, module in ipairs(modules) do
     safe_require(module)
   end
+
+  -- Run which-key health check to verify we've fixed the conflicts
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "VeryLazy",
+    callback = function()
+      vim.api.nvim_command("checkhealth which-key")
+    end,
+    once = true,
+  })
 end
 
 return M

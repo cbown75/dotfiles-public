@@ -1,7 +1,10 @@
 local km = vim.keymap
 
+-- Python operations with prefix <leader>op
+km.set("n", "<leader>op", "<nop>", { desc = "Python" })
+
 -- Python virtual environment activation
-km.set("n", "<leader>pv", function()
+km.set("n", "<leader>opv", function()
   -- Try to find virtual environments in common locations
   local venv_dirs = {
     vim.fn.getcwd() .. "/venv",
@@ -44,9 +47,9 @@ km.set("n", "<leader>pv", function()
 end, { desc = "Activate Python virtual environment" })
 
 -- Python testing and debugging
-km.set("n", "<leader>pt", ":terminal python -m pytest<CR>", { desc = "Run pytest" })
-km.set("n", "<leader>pr", ":terminal python %<CR>", { desc = "Run current file" })
-km.set("n", "<leader>pi", ":terminal python -m pip install -r requirements.txt<CR>", { desc = "Install requirements" })
-km.set("n", "<leader>pf", ":terminal python -m black .<CR>", { desc = "Format with black" })
+km.set("n", "<leader>opt", ":terminal python -m pytest<CR>", { desc = "Run pytest" })
+km.set("n", "<leader>opr", ":terminal python %<CR>", { desc = "Run current file" })
+km.set("n", "<leader>opi", ":terminal python -m pip install -r requirements.txt<CR>", { desc = "Install requirements" })
+km.set("n", "<leader>opf", ":terminal python -m black .<CR>", { desc = "Format with black" })
 
 return {}

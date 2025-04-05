@@ -1,10 +1,27 @@
 local km = vim.keymap
 
--- Terminal operations
-km.set("n", "<leader>ts", ":terminal<CR>", { desc = "Open terminal (horizontal split)" })
-km.set("n", "<leader>tv", ":vnew | terminal<CR>", { desc = "Open terminal (vertical split)" })
+-- TMUX group
+km.set("n", "<leader>tm", "<nop>", { desc = "Tmux Operations" })
 
--- Tmux integration
+-- Terminal operations
+km.set("n", "<leader>tn", ":terminal<CR>", { desc = "New terminal (horizontal)" })
+km.set("n", "<leader>tv", ":vnew | terminal<CR>", { desc = "New terminal (vertical)" })
+
+-- Toggle terminal (single option to avoid duplicates)
+km.set("n", "<leader>tt", function()
+  if require("snacks") and require("snacks").terminal then
+    require("snacks").terminal()
+  end
+end, { desc = "Toggle terminal" })
+
+-- Use <c-/> as alternate binding for toggle terminal
+km.set("n", "<c-/>", function()
+  if require("snacks") and require("snacks").terminal then
+    require("snacks").terminal()
+  end
+end, { desc = "Toggle terminal" })
+
+-- Tmux integration (under the tmux prefix)
 km.set("n", "<leader>tmf", function()
   if _G.tmux_utils and _G.tmux_utils.find_session then
     _G.tmux_utils.find_session()
@@ -23,7 +40,7 @@ km.set("n", "<leader>tml", function()
   end
 end, { desc = "List tmux sessions" })
 
--- Window resize operations
+-- Window resize operations (under tmux prefix for consistency)
 km.set("n", "<leader>tmw+", function()
   if _G.tmux_utils and _G.tmux_utils.resize_pane then
     _G.tmux_utils.resize_pane("up")
@@ -66,17 +83,12 @@ km.set("n", "<leader>tms", ":!tmux new-session -d -s<space>", { desc = "Create n
 km.set("n", "<leader>tma", ":!tmux attach -t<space>", { desc = "Attach to tmux session" })
 km.set("n", "<leader>tmL", ":!tmux list-sessions<CR>", { desc = "List tmux sessions" })
 
--- Terminal toggle (built-in)
-km.set("n", "<leader>tt", function()
-  if require("snacks") and require("snacks").terminal then
-    require("snacks").terminal()
-  end
-end, { desc = "Toggle terminal" })
-
-km.set("n", "<c-/>", function()
-  if require("snacks") and require("snacks").terminal then
-    require("snacks").terminal()
-  end
-end, { desc = "Toggle terminal" })
+-- Tab operations - move to their own prefix
+km.set("n", "<leader>ta", "<nop>", { desc = "Tab Operations" })
+km.set("n", "<leader>tao", "<cmd>tabnew<CR>", { desc = "Open new tab" })
+km.set("n", "<leader>tax", "<cmd>tabclose<CR>", { desc = "Close current tab" })
+km.set("n", "<leader>tan", "<cmd>tabn<CR>", { desc = "Go to next tab" })
+km.set("n", "<leader>tap", "<cmd>tabp<CR>", { desc = "Go to previous tab" })
+km.set("n", "<leader>taf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" })
 
 return {}

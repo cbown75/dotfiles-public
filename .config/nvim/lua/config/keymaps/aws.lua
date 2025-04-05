@@ -1,7 +1,9 @@
 local km = vim.keymap
 
--- AWS operations with prefix <leader>a
-km.set("n", "<leader>ap", function()
+-- AWS operations with prefix <leader>oa
+km.set("n", "<leader>oa", "<nop>", { desc = "AWS" })
+
+km.set("n", "<leader>oap", function()
   local aws_config_file = os.getenv("HOME") .. "/.aws/config"
   local profiles = {}
 
@@ -29,11 +31,11 @@ km.set("n", "<leader>ap", function()
   end)
 end, { desc = "Switch AWS profile" })
 
-km.set("n", "<leader>ae", ":terminal aws ec2 describe-instances<CR>", { desc = "List EC2 instances" })
-km.set("n", "<leader>as3", ":terminal aws s3 ls<CR>", { desc = "List S3 buckets" })
-km.set("n", "<leader>al", ":terminal aws lambda list-functions<CR>", { desc = "List Lambda functions" })
-km.set("n", "<leader>ar", ":terminal aws rds describe-db-instances<CR>", { desc = "List RDS instances" })
-km.set("n", "<leader>ac", ":terminal aws cloudformation list-stacks<CR>", { desc = "CloudFormation stacks" })
-km.set("n", "<leader>ai", ":terminal aws sts get-caller-identity<CR>", { desc = "Show current identity" })
+km.set("n", "<leader>oae", ":terminal aws ec2 describe-instances<CR>", { desc = "List EC2 instances" })
+km.set("n", "<leader>oas", ":terminal aws s3 ls<CR>", { desc = "List S3 buckets" })
+km.set("n", "<leader>oal", ":terminal aws lambda list-functions<CR>", { desc = "List Lambda functions" })
+km.set("n", "<leader>oar", ":terminal aws rds describe-db-instances<CR>", { desc = "List RDS instances" })
+km.set("n", "<leader>oac", ":terminal aws cloudformation list-stacks<CR>", { desc = "CloudFormation stacks" })
+km.set("n", "<leader>oai", ":terminal aws sts get-caller-identity<CR>", { desc = "Show current identity" })
 
 return {}

@@ -1,28 +1,32 @@
 local km = vim.keymap
 
 -- Code operations
+km.set("n", "<leader>c", "<nop>", { desc = "Code Operations" })
 km.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
 km.set("n", "<leader>cf", vim.lsp.buf.format, { desc = "Format code" })
 km.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename symbol" })
 km.set("n", "<leader>ci", vim.lsp.buf.hover, { desc = "Code info/hover" })
 km.set("n", "K", vim.lsp.buf.hover, { desc = "Show hover information" })
-km.set("n", "<leader>cR", function()
+
+-- File operations within Code section
+km.set("n", "<leader>cn", function()
   if require("snacks") and require("snacks").rename then
     require("snacks").rename.rename_file()
   end
-end, { desc = "Rename file" })
+end, { desc = "Rename file" }) -- Changed from cR to cn
 
--- Go-to operations
-km.set("n", "<leader>gd", vim.lsp.buf.definition, { desc = "Go to definition" })
-km.set("n", "<leader>gr", vim.lsp.buf.references, { desc = "Go to references" })
+-- Go-to operations - keep under lsp as they're related
+km.set("n", "<leader>cd", vim.lsp.buf.definition, { desc = "Go to definition" }) -- Changed from gd to cd
+km.set("n", "<leader>cr", vim.lsp.buf.references, { desc = "Go to references" }) -- Keep the cr since we're in Code group
 
 -- Diagnostics
 km.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
 km.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
-km.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic message" })
-km.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic list" })
+km.set("n", "<leader>ce", vim.diagnostic.open_float, { desc = "Show diagnostic message" }) -- Changed from e to ce
+km.set("n", "<leader>cq", vim.diagnostic.setloclist, { desc = "Open diagnostic list" })    -- Changed from q to cq
 
--- Search operations
+-- Search operations - move to search group
+km.set("n", "<leader>s", "<nop>", { desc = "Search Operations" })
 km.set("n", "<leader>sr", function()
   if require("spectre") then
     require("spectre").open()
@@ -34,7 +38,8 @@ km.set("n", "<leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", { de
 km.set("n", "<leader>sw", "<cmd>Telescope grep_string<CR>", { desc = "Search word under cursor" })
 km.set("n", "<leader>sn", "<cmd>Telescope notify<CR>", { desc = "Search notifications" })
 
--- Trouble diagnostics
+-- Trouble diagnostics - move under separate section
+km.set("n", "<leader>x", "<nop>", { desc = "Trouble/Diagnostics" })
 km.set("n", "<leader>xx", function()
   if require("trouble") then
     require("trouble").toggle()
@@ -60,11 +65,11 @@ km.set("n", "<leader>xl", function()
     require("trouble").toggle("loclist")
   end
 end, { desc = "Location list" })
-km.set("n", "gR", function()
+km.set("n", "<leader>xr", function()
   if require("trouble") then
     require("trouble").toggle("lsp_references")
   end
-end, { desc = "LSP references" })
+end, { desc = "LSP references" }) -- Changed from gR to xr
 km.set("n", "<leader>xt", "<cmd>TodoTrouble<cr>", { desc = "Todo (Trouble)" })
 km.set("n", "<leader>xT", "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>", { desc = "Todo/Fix/Fixme (Trouble)" })
 km.set("n", "<leader>xu", ":UndotreeToggle<cr>", { desc = "Undo Tree" })

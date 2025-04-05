@@ -1,27 +1,31 @@
+-- ~/.config/nvim/lua/config/keymaps/kubernetes.lua
 local km = vim.keymap
 
+-- Kubernetes operations with main group prefix <leader>ok
+km.set("n", "<leader>ok", "<nop>", { desc = "Kubernetes" })
+
 -- Basic k9s operations
-km.set("n", "<leader>k9", ":K9s<CR>", { desc = "Launch k9s" })
-km.set("n", "<leader>kv", ":K9s vctx<CR>", { desc = "Launch k9s in vertical split" })
-km.set("n", "<leader>kh", ":K9s ctx<CR>", { desc = "Launch k9s in horizontal split" })
+km.set("n", "<leader>ok9", ":K9s<CR>", { desc = "Launch k9s" })
+km.set("n", "<leader>okv", ":K9s vctx<CR>", { desc = "Launch k9s in vertical split" })
+km.set("n", "<leader>okh", ":K9s ctx<CR>", { desc = "Launch k9s in horizontal split" })
 
 -- Context and namespace management
-km.set("n", "<leader>kc", ":K9s context<CR>", { desc = "Change Kubernetes context" })
-km.set("n", "<leader>kn", ":K9s namespace<CR>", { desc = "Change Kubernetes namespace" })
+km.set("n", "<leader>okc", ":K9s context<CR>", { desc = "Change Kubernetes context" })
+km.set("n", "<leader>okn", ":K9s namespace<CR>", { desc = "Change Kubernetes namespace" })
 
 -- Resource viewing
-km.set("n", "<leader>kp", ":K9s pods<CR>", { desc = "View pods in k9s" })
-km.set("n", "<leader>kd", ":K9s deployments<CR>", { desc = "View deployments in k9s" })
-km.set("n", "<leader>ks", ":K9s services<CR>", { desc = "View services in k9s" })
-km.set("n", "<leader>ki", ":K9s ingresses<CR>", { desc = "View ingresses in k9s" })
-km.set("n", "<leader>km", ":K9s configmaps<CR>", { desc = "View configmaps in k9s" })
-km.set("n", "<leader>kS", ":K9s secrets<CR>", { desc = "View secrets in k9s" })
-km.set("n", "<leader>kj", ":K9s jobs<CR>", { desc = "View jobs in k9s" })
-km.set("n", "<leader>kr", ":K9s file<CR>", { desc = "View resource from current file" })
+km.set("n", "<leader>okp", ":K9s pods<CR>", { desc = "View pods in k9s" })
+km.set("n", "<leader>okd", ":K9s deployments<CR>", { desc = "View deployments in k9s" })
+km.set("n", "<leader>oks", ":K9s services<CR>", { desc = "View services in k9s" })
+km.set("n", "<leader>oki", ":K9s ingresses<CR>", { desc = "View ingresses in k9s" })
+km.set("n", "<leader>okm", ":K9s configmaps<CR>", { desc = "View configmaps in k9s" })
+km.set("n", "<leader>okS", ":K9s secrets<CR>", { desc = "View secrets in k9s" })
+km.set("n", "<leader>okj", ":K9s jobs<CR>", { desc = "View jobs in k9s" })
+km.set("n", "<leader>okr", ":K9s file<CR>", { desc = "View resource from current file" })
 
 -- Logs viewing
-km.set("n", "<leader>kl", ":K9sLogs<CR>", { desc = "View logs for resource" })
-km.set("n", "<leader>kL", function()
+km.set("n", "<leader>okl", ":K9sLogs<CR>", { desc = "View logs for resource" })
+km.set("n", "<leader>okL", function()
   -- Extract pod name from current file and view logs
   local bufnr = vim.api.nvim_get_current_buf()
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
@@ -53,7 +57,7 @@ km.set("n", "<leader>kL", function()
 end, { desc = "View logs for resource in current file" })
 
 -- Apply current file
-km.set("n", "<leader>ka", function()
+km.set("n", "<leader>oka", function()
   -- Get the file path
   local filepath = vim.fn.expand("%:p")
 
@@ -109,12 +113,8 @@ km.set("n", "<leader>ka", function()
   end)
 end, { desc = "Apply current kubernetes manifest" })
 
--- K8s validation
-km.set("n", "<leader>vk", ":term kubectl validate<CR>", { desc = "Validate Kubernetes manifests" })
-km.set("n", "<leader>vy", ":term yamllint %<CR>", { desc = "Validate YAML with yamllint" })
-
 -- Navigate to Kubernetes directory
-km.set("n", "<leader>ck", function()
+km.set("n", "<leader>cok", function()
   -- Navigate to Kubernetes directory
   local k8s_dirs = { "./k8s", "../k8s", "./kubernetes", "../kubernetes", "./helm", "../helm" }
   for _, dir in ipairs(k8s_dirs) do
