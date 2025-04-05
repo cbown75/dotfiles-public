@@ -1,7 +1,13 @@
 local km = vim.keymap
 
--- AWS Operations
-km.set("n", "<leader>ap", function()
+km.set("n", "<leader>tf", ":! terraform fmt<CR>", { desc = "Terraform Format" })
+km.set("n", "<leader>tp", ":terminal terraform plan<CR>", { desc = "Terraform Plan" })
+km.set("n", "<leader>ta", ":terminal terraform apply<CR>", { desc = "Terraform Apply" })
+km.set("n", "<leader>td", ":terminal terraform destroy<CR>", { desc = "Terraform Destroy" })
+km.set("n", "<leader>ti", ":terminal terraform init<CR>", { desc = "Terraform Init" })
+km.set("n", "<leader>tv", ":terminal terraform validate<CR>", { desc = "Terraform Validate" })
+
+km.set("n", "<leader>awp", function()
   local aws_config_file = os.getenv("HOME") .. "/.aws/config"
   local profiles = {}
 
@@ -29,21 +35,18 @@ km.set("n", "<leader>ap", function()
   end)
 end, { desc = "Switch AWS profile" })
 
--- AWS resource listing
-km.set("n", "<leader>ae", ":terminal aws ec2 describe-instances<CR>", { desc = "List EC2 instances" })
-km.set("n", "<leader>as", ":terminal aws s3 ls<CR>", { desc = "List S3 buckets" })
-km.set("n", "<leader>al", ":terminal aws lambda list-functions<CR>", { desc = "List Lambda functions" })
-km.set("n", "<leader>ar", ":terminal aws rds describe-db-instances<CR>", { desc = "List RDS instances" })
+km.set("n", "<leader>awe", ":terminal aws ec2 describe-instances<CR>", { desc = "List EC2 instances" })
+km.set("n", "<leader>aws", ":terminal aws s3 ls<CR>", { desc = "List S3 buckets" })
+km.set("n", "<leader>awl", ":terminal aws lambda list-functions<CR>", { desc = "List Lambda functions" })
+km.set("n", "<leader>awr", ":terminal aws rds describe-db-instances<CR>", { desc = "List RDS instances" })
 
--- Docker operations
-km.set("n", "<leader>dc", ":terminal docker-compose up -d<CR>", { desc = "Docker-compose up" })
-km.set("n", "<leader>dd", ":terminal docker-compose down<CR>", { desc = "Docker-compose down" })
-km.set("n", "<leader>dl", ":terminal docker ps<CR>", { desc = "List Docker containers" })
-km.set("n", "<leader>di", ":terminal docker images<CR>", { desc = "List Docker images" })
-km.set("n", "<leader>dp", ":terminal docker pull<Space>", { desc = "Docker pull" })
-km.set("n", "<leader>db", ":terminal docker build -t<Space>", { desc = "Docker build" })
+km.set("n", "<leader>doc", ":terminal docker-compose up -d<CR>", { desc = "Docker-compose up" })
+km.set("n", "<leader>dod", ":terminal docker-compose down<CR>", { desc = "Docker-compose down" })
+km.set("n", "<leader>dol", ":terminal docker ps<CR>", { desc = "List Docker containers" })
+km.set("n", "<leader>doi", ":terminal docker images<CR>", { desc = "List Docker images" })
+km.set("n", "<leader>dop", ":terminal docker pull<Space>", { desc = "Docker pull" })
+km.set("n", "<leader>dob", ":terminal docker build -t<Space>", { desc = "Docker build" })
 
--- Python virtual environment activation
 km.set("n", "<leader>py", function()
   -- Try to find virtual environments in common locations
   local venv_dirs = {
@@ -86,32 +89,27 @@ km.set("n", "<leader>py", function()
   end)
 end, { desc = "Activate Python virtual environment" })
 
--- Docker validation
 km.set("n", "<leader>vd", ":term hadolint %<CR>", { desc = "Validate Dockerfile with hadolint" })
 
--- YAML/JSON conversion
 km.set("n", "<leader>yj", ":%!yq eval -j .<CR>", { desc = "Convert YAML to JSON" })
 km.set("n", "<leader>jy", ":%!yq eval -y .<CR>", { desc = "Convert JSON to YAML" })
 
--- Base64 encode/decode selected text
 km.set("v", "<leader>be", "c<C-r>=system('base64', @\")<CR><ESC>", { desc = "Base64 encode" })
 km.set("v", "<leader>bd", "c<C-r>=system('base64 --decode', @\")<CR><ESC>", { desc = "Base64 decode" })
 
--- URL encode/decode selected text
 km.set(
   "v",
-  "<leader>ue",
+  "<leader>ure",
   'c<C-r>=system(\'python3 -c "import sys, urllib.parse; print(urllib.parse.quote_plus(sys.stdin.read()))"\', @")<CR><ESC>',
   { desc = "URL encode" }
 )
 km.set(
   "v",
-  "<leader>ud",
+  "<leader>urd",
   'c<C-r>=system(\'python3 -c "import sys, urllib.parse; print(urllib.parse.unquote_plus(sys.stdin.read()))"\', @")<CR><ESC>',
   { desc = "URL decode" }
 )
 
--- SSH to selected host
 km.set("n", "<leader>sh", function()
   -- Try to read hosts from SSH config
   local hosts = {}
@@ -136,5 +134,19 @@ km.set("n", "<leader>sh", function()
     end
   end)
 end, { desc = "SSH to host" })
+
+-- Navigate to a project directory
+km.set("n", "<leader>ct", function()
+  -- Navigate to Terraform directory
+  local tf_dirs = { "./terraform", "../terraform", "./infra", "../infra" }
+  for _, dir in ipairs(tf_dirs) do
+    if vim.fn.isdirectory(dir) == 1 then
+      vim.cmd("cd " .. dir)
+      vim.notify("Changed to " .. dir, vim.log.levels.INFO)
+      return
+    end
+  end
+  vim.notify("No Terraform directory found", vim.log.levels.WARN)
+end, { desc = "Change to Terraform directory" })
 
 return {}

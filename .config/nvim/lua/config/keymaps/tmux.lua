@@ -1,54 +1,82 @@
 local km = vim.keymap
 
--- Session management
-km.set("n", "<leader>Tf", function()
-  _G.tmux_utils.find_session()
+-- Terminal operations
+km.set("n", "<leader>ts", ":terminal<CR>", { desc = "Open terminal (horizontal split)" })
+km.set("n", "<leader>tv", ":vnew | terminal<CR>", { desc = "Open terminal (vertical split)" })
+
+-- Tmux integration
+km.set("n", "<leader>tmf", function()
+  if _G.tmux_utils and _G.tmux_utils.find_session then
+    _G.tmux_utils.find_session()
+  end
 end, { desc = "Find tmux session" })
-km.set("n", "<leader>Tn", function()
-  _G.tmux_utils.new_session()
+
+km.set("n", "<leader>tmn", function()
+  if _G.tmux_utils and _G.tmux_utils.new_session then
+    _G.tmux_utils.new_session()
+  end
 end, { desc = "New tmux session" })
-km.set("n", "<leader>Tl", function()
-  _G.tmux_utils.list_sessions()
+
+km.set("n", "<leader>tml", function()
+  if _G.tmux_utils and _G.tmux_utils.list_sessions then
+    _G.tmux_utils.list_sessions()
+  end
 end, { desc = "List tmux sessions" })
 
--- Window operations
-km.set("n", "<leader>Tw+", function()
-  _G.tmux_utils.resize_pane("up")
+-- Window resize operations
+km.set("n", "<leader>tmw+", function()
+  if _G.tmux_utils and _G.tmux_utils.resize_pane then
+    _G.tmux_utils.resize_pane("up")
+  end
 end, { desc = "Resize pane up" })
-km.set("n", "<leader>Tw-", function()
-  _G.tmux_utils.resize_pane("down")
+
+km.set("n", "<leader>tmw-", function()
+  if _G.tmux_utils and _G.tmux_utils.resize_pane then
+    _G.tmux_utils.resize_pane("down")
+  end
 end, { desc = "Resize pane down" })
-km.set("n", "<leader>Tw<", function()
-  _G.tmux_utils.resize_pane("left")
+
+km.set("n", "<leader>tmw<", function()
+  if _G.tmux_utils and _G.tmux_utils.resize_pane then
+    _G.tmux_utils.resize_pane("left")
+  end
 end, { desc = "Resize pane left" })
-km.set("n", "<leader>Tw>", function()
-  _G.tmux_utils.resize_pane("right")
+
+km.set("n", "<leader>tmw>", function()
+  if _G.tmux_utils and _G.tmux_utils.resize_pane then
+    _G.tmux_utils.resize_pane("right")
+  end
 end, { desc = "Resize pane right" })
 
 -- Tmux splits
-km.set("n", "<leader>Th", function()
-  _G.tmux_utils.new_split("vertical")
+km.set("n", "<leader>tmh", function()
+  if _G.tmux_utils and _G.tmux_utils.new_split then
+    _G.tmux_utils.new_split("vertical")
+  end
 end, { desc = "Horizontal tmux split" })
-km.set("n", "<leader>Tv", function()
-  _G.tmux_utils.new_split("horizontal")
+
+km.set("n", "<leader>tmv", function()
+  if _G.tmux_utils and _G.tmux_utils.new_split then
+    _G.tmux_utils.new_split("horizontal")
+  end
 end, { desc = "Vertical tmux split" })
 
--- Toggle session recording (if using vim-obsession)
-km.set("n", "<leader>Tm", function()
-  if _G.toggle_session_recording then
-    _G.toggle_session_recording()
-  else
-    vim.cmd("Obsession")
+-- Session management
+km.set("n", "<leader>tms", ":!tmux new-session -d -s<space>", { desc = "Create new tmux session" })
+km.set("n", "<leader>tma", ":!tmux attach -t<space>", { desc = "Attach to tmux session" })
+km.set("n", "<leader>tmL", ":!tmux list-sessions<CR>", { desc = "List tmux sessions" })
+
+-- Terminal toggle (built-in)
+km.set("n", "<leader>tt", function()
+  if require("snacks") and require("snacks").terminal then
+    require("snacks").terminal()
   end
-end, { desc = "Toggle tmux session recording" })
+end, { desc = "Toggle terminal" })
 
--- Tmux window/session management
-km.set("n", "<leader>Ts", ":!tmux new-session -d -s<space>", { desc = "Create new tmux session" })
-km.set("n", "<leader>Ta", ":!tmux attach -t<space>", { desc = "Attach to tmux session" })
-km.set("n", "<leader>TL", ":!tmux list-sessions<CR>", { desc = "List tmux sessions" })
-
--- Tmux terminal in a specific pane
-km.set("n", "<leader>Tt", ":silent !tmux split-window -h<CR>", { desc = "Horiz. terminal split" })
-km.set("n", "<leader>Tv", ":silent !tmux split-window -v<CR>", { desc = "Vert. terminal split" })
+km.set("n", "<c-/>", function()
+  if require("snacks") and require("snacks").terminal then
+    require("snacks").terminal()
+  end
+end, { desc = "Toggle terminal" })
 
 return {}
