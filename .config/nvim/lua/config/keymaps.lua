@@ -32,15 +32,6 @@ function M.setup()
   for _, module in ipairs(modules) do
     safe_require(module)
   end
-
-  -- Run which-key health check to verify we've fixed the conflicts
-  vim.api.nvim_create_autocmd("User", {
-    pattern = "VeryLazy",
-    callback = function()
-      vim.api.nvim_command("checkhealth which-key")
-    end,
-    once = true,
-  })
 end
 
 return M
