@@ -8,7 +8,7 @@ function M.load()
   require("config.keymaps.ai")
   require("config.keymaps.lsp")
   require("config.keymaps.navigation")
-  require("config.keymaps.terminal")
+  require("config.keymaps.tmux")
 end
 
 return M

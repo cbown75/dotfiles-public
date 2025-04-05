@@ -17,7 +17,7 @@ safe_require("config.keymaps.core")
 -- DevOps and tools
 safe_require("config.keymaps.devops")
 safe_require("config.keymaps.kubernetes")
-safe_require("config.keymaps.terminal")
+safe_require("config.keymaps.tmux")
 
 -- Programming and code navigation
 safe_require("config.keymaps.lsp")
