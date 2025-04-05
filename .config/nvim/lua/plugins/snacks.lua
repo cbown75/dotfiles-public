@@ -6,6 +6,7 @@ return {
 	opts = {
 		bigfile = { enabled = true },
 		dashboard = { enabled = true },
+		image = { enabled = true },
 		indent = { enabled = true },
 		input = { enabled = false },
 		notifier = {
@@ -48,7 +49,7 @@ return {
 				)
 				_G.toggle_treesitter = Snacks.toggle.treesitter()
 				_G.toggle_background =
-					Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" })
+						Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" })
 				_G.toggle_inlay_hints = Snacks.toggle.inlay_hints()
 				_G.toggle_indent = Snacks.toggle.indent()
 				_G.toggle_dim = Snacks.toggle.dim()
