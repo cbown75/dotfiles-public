@@ -1,7 +1,7 @@
-require("config.options") -- General Neovim options (now includes deprecation fixes)
-require("config.lazy")    -- Plugin manager setup
-require("config.autocmd") -- Autocommands
-require("config.keymaps") -- Keymaps
+require("config.options")
+require("config.lazy")
+require("config.autocmd")
+require("config.keymaps").setup()
 
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",
