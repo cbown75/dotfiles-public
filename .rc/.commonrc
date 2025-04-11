@@ -22,3 +22,5 @@ alias goodmorning='brews && cdd && gl && cdt && gl && cddp && gl && cdk && gl &&
 
 alias ls='eza -la --git --icons'
 alias lt='eza --tree --level=2 --long --icons --git'
+
+export obyt='/Users/cbown75/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Obsidian/Resources/Media/Youtube/NeedsOrganized'
