@@ -1,5 +1,5 @@
 alias fabric='fabric-ai'
-obsidian_base="/Users/cbown75/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Resources/Media/Youtube/NeedsOrganized"
+export obsidian_base="/Users/cbown75/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Resources/Media/Youtube/NeedsOrganized"
 
 # Loop through all files in the ~/.config/fabric/patterns directory
 for pattern_file in ~/.config/fabric/patterns/*; do

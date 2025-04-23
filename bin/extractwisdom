@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") -u <YouTube URL|ID> -o <output filename>
+
+  -u URL|ID   Full YouTube URL (e.g. https://youtu.be/ID?si=…) or just the 11-char video ID
+  -o FILE     Name of the .md file under \$obsidian_base
+
+Example:
+  $(basename "$0") \
+    -u "https://youtu.be/tVIHNnbsjIQ?si=_s8jI-I0Ba77Peif" \
+    -o "Using the Smartest AI to Rate Other AI.md"
+EOF
+  exit 1
+}
+
+#— parse flags
+youtube_url="" output_name=""
+while getopts "u:o:" opt; do
+  case $opt in
+    u) youtube_url=$OPTARG ;;
+    o) output_name=$OPTARG ;;
+    *) usage ;;
+  esac
+done
+shift $((OPTIND-1))
+[[ -z $youtube_url || -z $output_name ]] && usage
+
+#— strip off any query string
+youtube_url="${youtube_url%%\?*}"
+
+#— if just an ID, build the full youtu.be URL
+if [[ $youtube_url =~ ^[A-Za-z0-9_-]{11}$ ]]; then
+  youtube_url="https://youtu.be/$youtube_url"
+fi
+
+#— ensure obsidian_base is set
+if [[ -z ${obsidian_base-} ]]; then
+  echo "❌ Please set \$obsidian_base in your shell (e.g. in ~/.zshrc)." >&2
+  exit 1
+fi
+
+#— pick the fabric command
+fabric_cmd=fabric-ai
+if command -v fabric >/dev/null 2>&1; then
+  fabric_cmd=fabric
+fi
+
+#— build output path & run
+output_path="$obsidian_base/$output_name"
+mkdir -p "$(dirname "$output_path")"
+
+#— invoke the real binary
+"$fabric_cmd" -y "$youtube_url" -sp extract_wisdom > "$output_path"
+
+echo "✅ Wisdom extracted to: $output_path"
