@@ -23,4 +23,16 @@ km.set("v", "<leader>ae", function()
   require("avante").explain_selection()
 end, { desc = "Explain selection with Avante" })
 
+vim.keymap.set("i", "<C-l>", function()
+  local has_supermaven, sm = pcall(require, "supermaven-nvim.api")
+  if has_supermaven and sm.accept_suggestion then
+    sm.accept_suggestion()
+  else
+    vim.notify("Supermaven: accept_suggestion not found", vim.log.levels.ERROR)
+  end
+end, { desc = "Supermaven: Accept Suggestion", silent = true })
+
+vim.keymap.set("i", "<C-]>", function()
+  vim.fn["supermaven#ClearCompletion"]()
+end, { desc = "Supermaven: Clear Suggestion", silent = true })
 return {}

@@ -36,7 +36,6 @@ return {
           "lua_ls",
           "marksman",
           --"nil_ls",
-          "pylsp",
           "ruff",
           "tflint",
           "terraformls",
@@ -55,7 +54,7 @@ return {
     lazy = false,
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
+      capabilities.offsetEncoding = { "utf-8" }
       local lspconfig = require("lspconfig")
       lspconfig.ts_ls.setup({
         capabilities = capabilities,
@@ -66,7 +65,7 @@ return {
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
       })
-      lspconfig.pylsp.setup({
+      lspconfig.pyright.setup({
         capabilities = capabilities,
       })
     end,

@@ -52,3 +52,4 @@ package-lock.json
 package.json
 .config/tmux/plugins
 .config/nvim/.DS_Store
+.DS_Store
