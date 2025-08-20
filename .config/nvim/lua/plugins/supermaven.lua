@@ -24,15 +24,33 @@ return {
     {
       "hrsh7th/nvim-cmp",
       opts = function(_, opts)
-        -- FIXED: Only add Supermaven source when AI is enabled and configured properly
+        -- FIXED: Safely initialize sources table and add Supermaven
+        opts = opts or {}
+        opts.sources = opts.sources or {}
+
+        -- Only add Supermaven source when AI is enabled and configured properly
         if vim.g.ai_cmp ~= false then -- Allow both true and nil (default)
-          table.insert(opts.sources, 1, {
-            name = "supermaven",
-            group_index = 1,
-            priority = 750, -- High priority but below LSP
-            max_item_count = 10, -- Limit to prevent overwhelming
-          })
+          -- Check if sources is a nested table structure (LazyVim format)
+          if #opts.sources > 0 and type(opts.sources[1]) == "table" and opts.sources[1][1] then
+            -- LazyVim nested format: sources = { { source1, source2 }, { source3 } }
+            table.insert(opts.sources[1], 1, {
+              name = "supermaven",
+              group_index = 1,
+              priority = 750,
+              max_item_count = 10,
+            })
+          else
+            -- Standard format: sources = { source1, source2 }
+            table.insert(opts.sources, 1, {
+              name = "supermaven",
+              group_index = 1,
+              priority = 750,
+              max_item_count = 10,
+            })
+          end
         end
+
+        return opts
       end,
     },
   },
