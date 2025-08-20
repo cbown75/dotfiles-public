@@ -35,4 +35,22 @@ end, { desc = "Supermaven: Accept Suggestion", silent = true })
 vim.keymap.set("i", "<C-]>", function()
   vim.fn["supermaven#ClearCompletion"]()
 end, { desc = "Supermaven: Clear Suggestion", silent = true })
+
+vim.keymap.set("i", "<C-Tab>", function()
+  local cmp = require("cmp")
+
+  if cmp.visible() then
+    -- Menu is visible, confirm selection
+    cmp.confirm({ select = true })
+  else
+    -- For ghost text, trigger completion first, then confirm
+    cmp.complete()
+    vim.schedule(function()
+      if cmp.visible() then
+        cmp.confirm({ select = true })
+      end
+    end)
+  end
+end, { desc = "Accept nvim-cmp completion/ghost text", silent = true })
+
 return {}
