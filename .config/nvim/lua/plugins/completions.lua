@@ -53,6 +53,7 @@ return {
 					path = "[Path]",
 					cmdline = "[Cmd]",
 					conventionalcommits = "[Git]",
+					supermaven = "[AI]", -- Added for Supermaven source
 				})[entry.source.name]
 
 				-- Add icons from your existing icon setup
@@ -112,7 +113,7 @@ return {
 					debounce = 100,   -- Debounce time for LSP requests
 				},
 
-				-- Better mapping
+				-- FIXED: Stable Tab mapping without LazyVim abstractions
 				mapping = cmp.mapping.preset.insert({
 					-- Documentation scrolling
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -122,10 +123,10 @@ return {
 					["<C-Space>"] = cmp.mapping.complete(),
 					["<C-e>"] = cmp.mapping.abort(),
 
-					-- Enhanced tab for both selection and snippet traversal
+					-- FIXED: Explicit Tab behavior - no more conflicts
 					["<Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
-							cmp.select_next_item()
+							cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
 						elseif luasnip.expand_or_jumpable() then
 							luasnip.expand_or_jump()
 						elseif has_words_before() then
@@ -137,7 +138,7 @@ return {
 
 					["<S-Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
-							cmp.select_prev_item()
+							cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
 						elseif luasnip.jumpable(-1) then
 							luasnip.jump(-1)
 						else
@@ -145,9 +146,15 @@ return {
 						end
 					end, { "i", "s" }),
 
-					-- Different confirmation behaviors
-					["<CR>"] = cmp.mapping.confirm({ select = true }),
-					["<C-y>"] = cmp.mapping.confirm({ select = false }),
+					-- FIXED: Reliable confirmation
+					["<CR>"] = cmp.mapping.confirm({
+						behavior = cmp.ConfirmBehavior.Replace,
+						select = false, -- Only confirm explicitly selected items
+					}),
+					["<C-y>"] = cmp.mapping.confirm({
+						behavior = cmp.ConfirmBehavior.Insert,
+						select = true, -- Accept first item if none selected
+					}),
 				}),
 
 				-- Formatting setup
@@ -156,18 +163,21 @@ return {
 					format = format_item,
 				},
 
-				-- Source configuration - with priorities
+				-- FIXED: Source configuration with Supermaven integration
 				sources = cmp.config.sources({
-					{ name = "nvim_lsp", priority = 1000, max_item_count = 20 },
-					{ name = "luasnip",  priority = 750,  max_item_count = 10 },
-					{ name = "path",     priority = 500 },
+					{ name = "nvim_lsp",   priority = 1000, max_item_count = 20 },
+					{ name = "supermaven", priority = 750,  max_item_count = 10 }, -- Supermaven as source
+					{ name = "luasnip",    priority = 700,  max_item_count = 10 },
+					{ name = "path",       priority = 500 },
 				}, {
 					{ name = "buffer", priority = 250, keyword_length = 3, max_item_count = 10 },
 				}),
 
-				-- Enable experimental features
+				-- FIXED: Always enable ghost text - no conditional logic
 				experimental = {
-					ghost_text = true, -- Show completion as you type
+					ghost_text = {
+						hl_group = "CmpGhostText",
+					},
 				},
 
 				-- Better sorting for DevOps workflows
@@ -235,20 +245,22 @@ return {
 			-- Terraform
 			cmp.setup.filetype({ "terraform", "hcl" }, {
 				sources = cmp.config.sources({
-					{ name = "nvim_lsp", priority = 1000 },
-					{ name = "luasnip",  priority = 750 },
-					{ name = "buffer",   priority = 500 },
-					{ name = "path",     priority = 250 },
+					{ name = "nvim_lsp",   priority = 1000 },
+					{ name = "supermaven", priority = 750 },
+					{ name = "luasnip",    priority = 700 },
+					{ name = "buffer",     priority = 500 },
+					{ name = "path",       priority = 250 },
 				}),
 			})
 
 			-- Kubernetes YAML
 			cmp.setup.filetype({ "yaml", "yml" }, {
 				sources = cmp.config.sources({
-					{ name = "nvim_lsp", priority = 1000 },
-					{ name = "luasnip",  priority = 750 },
-					{ name = "buffer",   priority = 500 },
-					{ name = "path",     priority = 250 },
+					{ name = "nvim_lsp",   priority = 1000 },
+					{ name = "supermaven", priority = 750 },
+					{ name = "luasnip",    priority = 700 },
+					{ name = "buffer",     priority = 500 },
+					{ name = "path",       priority = 250 },
 				}),
 			})
 
@@ -263,10 +275,11 @@ return {
 			-- Shell scripts
 			cmp.setup.filetype({ "sh", "bash", "zsh" }, {
 				sources = cmp.config.sources({
-					{ name = "nvim_lsp", priority = 1000 },
-					{ name = "luasnip",  priority = 750 },
-					{ name = "buffer",   priority = 500 },
-					{ name = "path",     priority = 250 },
+					{ name = "nvim_lsp",   priority = 1000 },
+					{ name = "supermaven", priority = 750 },
+					{ name = "luasnip",    priority = 700 },
+					{ name = "buffer",     priority = 500 },
+					{ name = "path",       priority = 250 },
 				}),
 			})
 
@@ -286,10 +299,11 @@ return {
 						-- Add a higher priority buffer source for K8s files
 						cmp.setup.buffer({
 							sources = cmp.config.sources({
-								{ name = "nvim_lsp", priority = 1000 },
-								{ name = "luasnip",  priority = 750 },
-								{ name = "buffer",   priority = 700 }, -- Higher priority for K8s terms
-								{ name = "path",     priority = 250 },
+								{ name = "nvim_lsp",   priority = 1000 },
+								{ name = "supermaven", priority = 750 },
+								{ name = "luasnip",    priority = 700 },
+								{ name = "buffer",     priority = 650 }, -- Higher priority for K8s terms
+								{ name = "path",       priority = 250 },
 							}),
 						})
 					end
