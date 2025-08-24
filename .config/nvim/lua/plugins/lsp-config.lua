@@ -23,9 +23,9 @@ return {
 		config = function()
 			require("mason-lspconfig").setup({
 				ensure_installed = {
-					-- DevOps & Infrastructure
-					"bashls", -- Bash/Shell scripts ✅
-					"terraformls", -- Terraform
+					-- DevOps & Infrastructure (matches your current setup exactly)
+					"bashls", -- Bash/Shell scripts
+					"terraformls", -- Terraform/HCL
 					"tflint", -- Terraform linting
 					"helm_ls", -- Helm charts
 					"yamlls", -- YAML (K8s, Ansible, etc.)
@@ -43,10 +43,6 @@ return {
 					"jsonls", -- JSON
 					"jqls", -- jq (JSON query)
 					"marksman", -- Markdown
-
-					-- Web (commented out as you had them)
-					--"html",
-					--"nil_ls",
 				},
 				-- auto-install configured servers (with lspconfig)
 				automatic_installation = true, -- not the same as ensure_installed
@@ -71,6 +67,8 @@ return {
 			lspconfig.html.setup({
 				capabilities = capabilities,
 			})
+
+			-- Data & Config Formats
 			lspconfig.jsonls.setup({
 				capabilities = capabilities,
 				settings = {
@@ -79,6 +77,9 @@ return {
 						validate = { enable = true },
 					},
 				},
+			})
+			lspconfig.jqls.setup({
+				capabilities = capabilities,
 			})
 
 			-- Programming Languages
@@ -98,24 +99,93 @@ return {
 			})
 			lspconfig.pyright.setup({
 				capabilities = capabilities,
+				settings = {
+					python = {
+						analysis = {
+							-- Disable some diagnostics since we use ruff for linting
+							ignore = { "reportMissingImports" },
+						},
+					},
+				},
 			})
 			lspconfig.gopls.setup({
 				capabilities = capabilities,
+				settings = {
+					gopls = {
+						gofumpt = true,
+						codelenses = {
+							gc_details = false,
+							generate = true,
+							regenerate_cgo = true,
+							run_govulncheck = true,
+							test = true,
+							tidy = true,
+							upgrade_dependency = true,
+							vendor = true,
+						},
+						hints = {
+							assignVariableTypes = true,
+							compositeLiteralFields = true,
+							compositeLiteralTypes = true,
+							constantValues = true,
+							functionTypeParameters = true,
+							parameterNames = true,
+							rangeVariableTypes = true,
+						},
+						analyses = {
+							fieldalignment = true,
+							nilness = true,
+							unusedparams = true,
+							unusedwrite = true,
+							useany = true,
+						},
+						usePlaceholders = true,
+						completeUnimported = true,
+						staticcheck = true,
+						directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
+					},
+				},
 			})
 			lspconfig.rust_analyzer.setup({
 				capabilities = capabilities,
+				settings = {
+					["rust-analyzer"] = {
+						checkOnSave = {
+							command = "clippy",
+						},
+					},
+				},
 			})
 
-			-- DevOps & Infrastructure - THE MISSING ONES!
+			-- DevOps & Infrastructure - THE MISSING CONFIGURATIONS!
 			lspconfig.bashls.setup({
 				capabilities = capabilities,
 				filetypes = { "sh", "bash", "zsh" },
+				settings = {
+					bashIde = {
+						globPattern = "*@(.sh|.inc|.bash|.command)",
+					},
+				},
 			})
 			lspconfig.terraformls.setup({
 				capabilities = capabilities,
+				settings = {
+					terraform = {
+						validation = {
+							enableEnhancedValidation = true,
+						},
+					},
+				},
 			})
 			lspconfig.helm_ls.setup({
 				capabilities = capabilities,
+				settings = {
+					["helm-ls"] = {
+						yamlls = {
+							path = "yaml-language-server",
+						},
+					},
+				},
 			})
 			lspconfig.yamlls.setup({
 				capabilities = capabilities,
@@ -131,6 +201,8 @@ return {
 							["https://json.schemastore.org/github-workflow"] = ".github/workflows/*.{yml,yaml}",
 							-- Ansible
 							["https://raw.githubusercontent.com/ansible-community/schemas/main/f/ansible-playbook.json"] = "*playbook*.{yml,yaml}",
+							-- Helm charts
+							["https://json.schemastore.org/chart"] = "Chart.{yml,yaml}",
 						},
 						validate = true,
 						completion = true,
@@ -139,12 +211,21 @@ return {
 			})
 			lspconfig.dockerls.setup({
 				capabilities = capabilities,
+				settings = {
+					docker = {
+						languageserver = {
+							formatter = {
+								ignoreMultilineInstructions = true,
+							},
+						},
+					},
+				},
 			})
 			lspconfig.docker_compose_language_service.setup({
 				capabilities = capabilities,
 			})
 
-			-- Additional DevOps tools
+			-- Documentation
 			lspconfig.marksman.setup({
 				capabilities = capabilities,
 			})
