@@ -1,56 +1,48 @@
 return {
-  "nvimtools/none-ls.nvim",
-  dependencies = {
-    "nvimtools/none-ls-extras.nvim",
-    "jayp0521/mason-null-ls.nvim",
-  },
-  config = function()
-    require("mason-null-ls").setup({
-      ensure_installed = {
-        -- DevOps Linting/Diagnostics Tools
-        "yamllint", -- YAML validation for K8s/Ansible
-        "ansible-lint", -- Ansible playbook validation
-        "terraform-ls", -- Terraform Language Server diagnostics
-        "tflint",   -- Terraform linting
-        "hadolint", -- Dockerfile linting
-        "shellcheck", -- Shell script analysis
+	"nvimtools/none-ls.nvim",
+	dependencies = {
+		"nvimtools/none-ls-extras.nvim",
+		"jayp0521/mason-null-ls.nvim",
+	},
+	config = function()
+		require("mason-null-ls").setup({
+			ensure_installed = {
+				-- Only install tools that are working from your health check
+				"yamllint", -- ✅ Working
+				-- Remove "hadolint" since it's not executable
+			},
+			automatic_installation = false, -- Prevent auto-install errors
+		})
 
-        -- Code Quality Tools
-        "eslint_d",  -- JavaScript/TypeScript linting
-        "ruff",      -- Python linting (fast)
-        "golangci-lint", -- Go linting
+		local null_ls = require("null-ls")
 
-        -- Remove formatters to avoid conflicts with conform.nvim
-      },
-      automatic_installation = true,
-    })
+		local sources = {
+			-- DIAGNOSTICS ONLY - No formatting to prevent conflicts
 
-    local null_ls = require("null-ls")
+			-- ✅ Working tools from your health check
+			null_ls.builtins.diagnostics.yamllint.with({
+				extra_args = { "-d", "relaxed" }, -- Less strict for DevOps YAML
+			}),
 
-    local sources = {
-      -- DIAGNOSTICS & LINTING ONLY - No formatting to prevent conflicts
+			-- ✅ Terraform validation (terraform command is available)
+			null_ls.builtins.diagnostics.terraform_validate,
 
-      -- DevOps Tools Diagnostics
-      null_ls.builtins.diagnostics.yamllint.with({
-        extra_args = { "-d", "relaxed" }, -- Less strict for DevOps YAML
-      }),
-      null_ls.builtins.diagnostics.hadolint, -- Dockerfile linting
-      null_ls.builtins.diagnostics.terraform_validate,
-      null_ls.builtins.diagnostics.shellcheck,
+			-- Add shellcheck if it's available (probably is)
+			null_ls.builtins.diagnostics.shellcheck,
+			null_ls.builtins.code_actions.shellcheck,
 
-      -- Programming Languages Diagnostics
-      require("none-ls.diagnostics.eslint_d"), -- JS/TS
-      require("none-ls.diagnostics.ruff"),     -- Python
-      null_ls.builtins.diagnostics.golangci_lint, -- Go
+			-- JavaScript/TypeScript diagnostics (if none-ls-extras works)
+			require("none-ls.diagnostics.eslint_d"),
 
-      -- Code Actions (non-formatting)
-      null_ls.builtins.code_actions.shellcheck,
-      null_ls.builtins.hover.dictionary,
-    }
+			-- Always available utilities
+			null_ls.builtins.hover.dictionary,
 
-    require("null-ls").setup({
-      sources = sources,
-      -- REMOVED: on_attach with BufWritePre formatting to prevent conflicts
-    })
-  end,
+			-- REMOVED: hadolint (not executable according to health check)
+			-- Add it back later with: brew install hadolint
+		}
+
+		require("null-ls").setup({
+			sources = sources,
+		})
+	end,
 }
