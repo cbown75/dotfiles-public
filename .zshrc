@@ -91,9 +91,6 @@ fi
 if [ -f ~/.rc/.fabricrc ]; then
   source ~/.rc/.fabricrc
 fi
-if [ -r ~/.private/.privaterc ]; then 
-  source ~/.private/.privaterc
-fi
 
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
@@ -103,7 +100,6 @@ eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 
 PATH="/Users/cbown/perl5/bin${PATH:+:${PATH}}"; export PATH;
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 PERL5LIB="/Users/cbown/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
 PERL_LOCAL_LIB_ROOT="/Users/cbown/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/Users/cbown/perl5\""; export PERL_MB_OPT;
