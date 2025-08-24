@@ -44,25 +44,8 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- Auto format on save (if formatter is available)
-vim.api.nvim_create_autocmd("BufWritePre", {
-	desc = "Auto format on save",
-	group = augroup("auto_format"),
-	callback = function()
-		local filetype = vim.bo.filetype
-
-		-- Check if formatters are available for this filetype
-		if filetype == "lua" then
-			-- Only format Lua if stylua is available
-			if vim.fn.executable("stylua") == 1 then
-				vim.cmd("silent! Conform")
-			end
-		elseif vim.fn.exists(":ConformInfo") > 0 then
-			-- For other filetypes, check if Conform is available
-			vim.cmd("silent! Conform")
-		end
-	end,
-})
+-- REMOVED: Duplicate auto format on save autocommands (lines 47-65 and 113-131)
+-- Formatting is now handled exclusively by the plugin configurations (conform.nvim or none-ls)
 
 -- Set wrap and spell in markdown and text files
 vim.api.nvim_create_autocmd("FileType", {
@@ -108,26 +91,6 @@ vim.api.nvim_create_autocmd("CursorMoved", {
 				vim.cmd("redrawstatus")
 			end)
 		)
-	end,
-})
-
--- Auto format on save (if formatter is available)
-vim.api.nvim_create_autocmd("BufWritePre", {
-	desc = "Auto format on save",
-	group = augroup("auto_format"),
-	callback = function()
-		-- Skip formatting if Conform isn't available
-		if not package.loaded["conform"] then
-			return
-		end
-
-		-- Use the API directly with quiet = true to suppress messages
-		require("conform").format({
-			lsp_fallback = true,
-			async = false,
-			timeout_ms = 500,
-			quiet = true, -- This suppresses the messages
-		})
 	end,
 })
 
@@ -181,7 +144,7 @@ vim.api.nvim_create_autocmd({ "BufReadPost" }, {
 		local tabs, spaces = 0, 0
 
 		for _, line in ipairs(lines) do
-			if line:match("^\t") then
+			if line:match("^\\t") then
 				tabs = tabs + 1
 			elseif line:match("^ ") then
 				spaces = spaces + 1
@@ -242,12 +205,12 @@ vim.api.nvim_create_user_command("SnippetEdit", function(opts)
 		table.insert(template, 'local fmt = require("luasnip.extras.fmt").fmt')
 		table.insert(template, "")
 		table.insert(template, "return {")
-		table.insert(template, "  -- Example snippet")
-		table.insert(template, '  s("example", fmt([[')
-		table.insert(template, "  This is an example {} snippet for " .. ft .. ".")
-		table.insert(template, "  ]], {")
-		table.insert(template, '    i(1, "custom"),')
-		table.insert(template, "  })),")
+		table.insert(template, " -- Example snippet")
+		table.insert(template, ' s("example", fmt([[')
+		table.insert(template, " This is an example {} snippet for " .. ft .. ".")
+		table.insert(template, " ]], {")
+		table.insert(template, ' i(1, "custom"),')
+		table.insert(template, " }),")
 		table.insert(template, "}")
 
 		vim.fn.writefile(template, snippet_file)
@@ -303,16 +266,16 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 	group = augroup("devops_filetypes"),
 	pattern = {
 		"*.tf",
-		"*.tfvars", -- Terraform
+		"*.tfvars",  -- Terraform
 		"*dockerfile*",
 		"Dockerfile*", -- Docker
 		"*.yaml",
-		"*.yml", -- YAML (for k8s, etc)
+		"*.yml",     -- YAML (for k8s, etc)
 		"helmfile*.yaml",
 		"*/templates/*.yaml",
 		"*/templates/*.tpl", -- Helm
 		"serverless.yml",
-		"*/aws/*.yml", -- AWS
+		"*/aws/*.yml",     -- AWS
 		"ansible.cfg",
 		"*/playbooks/*.yml",
 		"*/roles/*.yml", -- Ansible
