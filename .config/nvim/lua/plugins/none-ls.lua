@@ -7,12 +7,20 @@ return {
   config = function()
     require("mason-null-ls").setup({
       ensure_installed = {
-        "ruff",
-        "prettier",
-        "shfmt",
-        "yamlfmt",
-        "isort",
-        "black",
+        -- DevOps Linting/Diagnostics Tools
+        "yamllint", -- YAML validation for K8s/Ansible
+        "ansible-lint", -- Ansible playbook validation
+        "terraform-ls", -- Terraform Language Server diagnostics
+        "tflint",   -- Terraform linting
+        "hadolint", -- Dockerfile linting
+        "shellcheck", -- Shell script analysis
+
+        -- Code Quality Tools
+        "eslint_d",  -- JavaScript/TypeScript linting
+        "ruff",      -- Python linting (fast)
+        "golangci-lint", -- Go linting
+
+        -- Remove formatters to avoid conflicts with conform.nvim
       },
       automatic_installation = true,
     })
@@ -20,35 +28,29 @@ return {
     local null_ls = require("null-ls")
 
     local sources = {
-      require("none-ls.diagnostics.eslint_d"),
-      require("none-ls.formatting.ruff").with({ extra_args = { "--extend-select", "I" } }),
-      require("none-ls.formatting.ruff_format"),
-      null_ls.builtins.formatting.stylua,
-      null_ls.builtins.formatting.prettier.with({ filetypes = { "json", "markdown", "css", "html" } }),
-      null_ls.builtins.diagnostics.yamllint,
-      null_ls.builtins.formatting.shfmt.with({ args = { "-i", "4" } }),
-      null_ls.builtins.formatting.terraform_fmt,
-      null_ls.builtins.formatting.yamlfmt,
+      -- DIAGNOSTICS & LINTING ONLY - No formatting to prevent conflicts
+
+      -- DevOps Tools Diagnostics
+      null_ls.builtins.diagnostics.yamllint.with({
+        extra_args = { "-d", "relaxed" }, -- Less strict for DevOps YAML
+      }),
+      null_ls.builtins.diagnostics.hadolint, -- Dockerfile linting
+      null_ls.builtins.diagnostics.terraform_validate,
+      null_ls.builtins.diagnostics.shellcheck,
+
+      -- Programming Languages Diagnostics
+      require("none-ls.diagnostics.eslint_d"), -- JS/TS
+      require("none-ls.diagnostics.ruff"),     -- Python
+      null_ls.builtins.diagnostics.golangci_lint, -- Go
+
+      -- Code Actions (non-formatting)
+      null_ls.builtins.code_actions.shellcheck,
+      null_ls.builtins.hover.dictionary,
     }
 
-    local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
     require("null-ls").setup({
-      on_init = function(client)
-        client.offset_encoding = "utf-8"
-      end,
       sources = sources,
-      on_attach = function(client, bufnr)
-        if client.supports_method("textDocument/formatting") then
-          vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            group = augroup,
-            buffer = bufnr,
-            callback = function()
-              vim.lsp.buf.format()
-            end,
-          })
-        end
-      end,
+      -- REMOVED: on_attach with BufWritePre formatting to prevent conflicts
     })
   end,
 }
