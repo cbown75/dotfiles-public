@@ -27,7 +27,7 @@ return {
 		-- Layout configuration
 		layout = {
 			width = { min = 20 }, -- min width of the columns
-			spacing = 3,       -- spacing between columns
+			spacing = 3, -- spacing between columns
 		},
 		-- Key behavior
 		keys = {
@@ -36,7 +36,7 @@ return {
 		},
 		-- Plugins configuration
 		plugins = {
-			marks = true,   -- shows marks on ' and `
+			marks = true, -- shows marks on ' and `
 			registers = true, -- shows registers on " in NORMAL or <C-r> in INSERT
 			spelling = {
 				enabled = true, -- enabling this will show WhichKey when pressing z=
@@ -44,12 +44,12 @@ return {
 			},
 			presets = {
 				operators = true, -- adds help for operators like d, y, ...
-				motions = true,  -- adds help for motions
+				motions = true, -- adds help for motions
 				text_objects = true, -- help for text objects triggered after entering an operator
-				windows = true,  -- default bindings on <c-w>
-				nav = true,      -- misc bindings to work with windows
-				z = true,        -- bindings for folds, spelling and others prefixed with z
-				g = true,        -- bindings for prefixed with g
+				windows = true, -- default bindings on <c-w>
+				nav = true, -- misc bindings to work with windows
+				z = true, -- bindings for folds, spelling and others prefixed with z
+				g = true, -- bindings for prefixed with g
 			},
 		},
 		show_help = true, -- show help message in the command line
@@ -75,6 +75,7 @@ return {
 				{ pattern = "<leader>u", icon = { icon = "󰒓", color = "purple" } },
 				{ pattern = "<leader>w", icon = { icon = "󱂬", color = "blue" } },
 				{ pattern = "<leader>x", icon = { icon = "󰁨", color = "red" } },
+				{ pattern = "<leader>e", icon = { icon = "📁", color = "blue" } }, -- NEW: File explorers
 
 				-- DevOps tools and workflows
 				{ pattern = "<leader>ok", icon = { icon = "󰠰", color = "blue" } }, -- Kubernetes
@@ -187,6 +188,73 @@ return {
 				icon = { icon = "󱘧", color = "yellow" },
 			},
 
+			-- NEW: File Explorer group
+			{
+				"<leader>e",
+				group = "File Explorers",
+				desc = "File management with Oil and Neo-tree",
+				icon = { icon = "📁", color = "blue" },
+			},
+
+			-- Oil specific mappings
+			{
+				"<leader>eo",
+				desc = "Oil: Current directory",
+				icon = { icon = "🛢️", color = "yellow" },
+			},
+			{
+				"<leader>ef",
+				desc = "Oil: Floating window",
+				icon = { icon = "🪟", color = "cyan" },
+			},
+			{
+				"<leader>ep",
+				desc = "Oil: Project root",
+				icon = { icon = "🏠", color = "green" },
+			},
+			{
+				"<leader>eh",
+				desc = "Oil: Home directory",
+				icon = { icon = "🏡", color = "purple" },
+			},
+			{
+				"<leader>ec",
+				desc = "Oil: Nvim config",
+				icon = { icon = "⚙️", color = "orange" },
+			},
+			{
+				"<leader>et",
+				desc = "Toggle Oil/Neo-tree",
+				icon = { icon = "🔄", color = "blue" },
+			},
+			{
+				"<leader>en",
+				desc = "Neo-tree: File explorer",
+				icon = { icon = "🌳", color = "green" },
+			},
+			{
+				"<leader>eb",
+				desc = "Neo-tree: Buffers",
+				icon = { icon = "📄", color = "yellow" },
+			},
+			{
+				"<leader>eg",
+				desc = "Neo-tree: Git status",
+				icon = { icon = "🔀", color = "orange" },
+			},
+
+			-- File operations
+			{
+				"<leader>ew",
+				desc = "Oil: Create file",
+				icon = { icon = "📄", color = "green" },
+			},
+			{
+				"<leader>eW",
+				desc = "Oil: Create directory",
+				icon = { icon = "📂", color = "green" },
+			},
+
 			-- DevOps subgroups with more specific icons
 			{
 				"<leader>ok",
@@ -223,6 +291,13 @@ return {
 				group = "Validate",
 				desc = "Validation commands",
 				icon = { icon = "✓", color = "green" },
+			},
+
+			-- Addition to your existing DevOps group
+			{
+				"<leader>oE",
+				desc = "Browse DevOps dirs (Oil)",
+				icon = { icon = "🗂️", color = "cyan" },
 			},
 
 			-- TMUX specific grouping
@@ -302,7 +377,7 @@ return {
 			},
 		})
 
-		-- Add a special mapping to show buffer-local keymaps
+		-- Add a special mapping to show buffer-local keymaps (separate wk.add)
 		wk.add({
 			{
 				"<leader>?",
