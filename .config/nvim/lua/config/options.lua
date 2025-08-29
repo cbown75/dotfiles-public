@@ -68,6 +68,10 @@ vim.opt.swapfile = false
 
 vim.opt.termguicolors = true
 
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+
 -- auto-reload files when modified externally
 vim.o.autoread = true
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {
@@ -112,50 +116,4 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 	callback = function()
 		vim.opt_local.commentstring = "# %s"
 	end,
-})
-
--- Safe patches for deprecated APIs - applied in a deferred manner
--- to avoid conflicts with core Neovim functions during startup
-vim.api.nvim_create_autocmd("VimEnter", {
-	callback = function()
-		-- Fix vim.highlight deprecation (safe approach)
-		if vim.highlight and not vim._highlight_patched then
-			local orig_range = vim.highlight.range
-			vim.highlight.range = function(bufnr, ns_id, hlgroup, start_pos, end_pos, priority)
-				-- Use the new API
-				if vim.hl and vim.hl.range then
-					return vim.hl.range(bufnr, ns_id, hlgroup, start_pos, end_pos, { priority = priority })
-				else
-					-- Fallback to the original function if the new API isn't available
-					return orig_range(bufnr, ns_id, hlgroup, start_pos, end_pos, priority)
-				end
-			end
-			vim._highlight_patched = true
-		end
-
-		-- Fix vim.str_utfindex deprecation (safe approach)
-		if vim.str_utfindex and not vim._str_utfindex_patched then
-			local orig_str_utfindex = vim.str_utfindex
-			vim.str_utfindex = function(s, idx, use_utf16)
-				if type(idx) == "number" then
-					-- Try the new API format
-					local ok, result = pcall(orig_str_utfindex, s, use_utf16 and "utf-16" or "utf-8", idx, false)
-					if ok then
-						return result
-					else
-						-- Fallback to original behavior if new format fails
-						return orig_str_utfindex(s, idx, use_utf16)
-					end
-				else
-					-- Already in the new format or unknown format, pass through
-					return orig_str_utfindex(s, idx, use_utf16)
-				end
-			end
-			vim._str_utfindex_patched = true
-		end
-
-		-- NOTE: We don't patch vim.validate to avoid the startup error
-		-- It's better to let the plugin authors update their code
-	end,
-	once = true,
 })
