@@ -1,7 +1,6 @@
 local km = vim.keymap
 
 -- Docker operations with prefix <leader>od
-km.set("n", "<leader>od", "<nop>", { desc = "Docker" })
 km.set("n", "<leader>odc", ":terminal docker-compose up -d<CR>", { desc = "Docker-compose up" })
 km.set("n", "<leader>odd", ":terminal docker-compose down<CR>", { desc = "Docker-compose down" })
 km.set("n", "<leader>odl", ":terminal docker ps<CR>", { desc = "List Docker containers" })

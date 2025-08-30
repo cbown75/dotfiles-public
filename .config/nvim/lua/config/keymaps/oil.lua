@@ -1,8 +1,5 @@
 local km = vim.keymap
 
--- File Explorer group - using <leader>e to avoid conflict with your <leader>o DevOps group
-km.set("n", "<leader>e", "<nop>", { desc = "File Explorers" })
-
 -- Oil.nvim keymaps
 km.set("n", "<leader>eo", "<cmd>Oil<CR>", { desc = "Oil: Current directory" })
 km.set("n", "<leader>ef", function()

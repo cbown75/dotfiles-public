@@ -1,9 +1,6 @@
 -- ~/.config/nvim/lua/config/keymaps/kubernetes.lua
 local km = vim.keymap
 
--- Kubernetes operations with main group prefix <leader>ok
-km.set("n", "<leader>ok", "<nop>", { desc = "Kubernetes" })
-
 -- Basic k9s operations
 km.set("n", "<leader>ok9", ":K9s<CR>", { desc = "Launch k9s" })
 km.set("n", "<leader>okv", ":K9s vctx<CR>", { desc = "Launch k9s in vertical split" })
@@ -26,105 +23,105 @@ km.set("n", "<leader>okr", ":K9s file<CR>", { desc = "View resource from current
 -- Logs viewing
 km.set("n", "<leader>okl", ":K9sLogs<CR>", { desc = "View logs for resource" })
 km.set("n", "<leader>okL", function()
-  -- Extract pod name from current file and view logs
-  local bufnr = vim.api.nvim_get_current_buf()
-  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-  local content = table.concat(lines, "\n")
+	-- Extract pod name from current file and view logs
+	local bufnr = vim.api.nvim_get_current_buf()
+	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+	local content = table.concat(lines, "\n")
 
-  local kind = content:match("kind:%s*([%w-]+)")
-  local name = content:match("name:%s*([%w-]+)")
+	local kind = content:match("kind:%s*([%w-]+)")
+	local name = content:match("name:%s*([%w-]+)")
 
-  if kind and name then
-    local resource_type = kind:lower()
+	if kind and name then
+		local resource_type = kind:lower()
 
-    -- Map to kubectl abbreviations
-    local resource_map = {
-      deployment = "deploy",
-      statefulset = "sts",
-      daemonset = "ds",
-      service = "svc",
-      ingress = "ing",
-      configmap = "cm",
-    }
+		-- Map to kubectl abbreviations
+		local resource_map = {
+			deployment = "deploy",
+			statefulset = "sts",
+			daemonset = "ds",
+			service = "svc",
+			ingress = "ing",
+			configmap = "cm",
+		}
 
-    resource_type = resource_map[resource_type] or resource_type
+		resource_type = resource_map[resource_type] or resource_type
 
-    vim.cmd("K9sLogs " .. resource_type .. "/" .. name)
-  else
-    vim.notify("Could not detect kubernetes resource in file", vim.log.levels.WARN)
-    vim.cmd("K9sLogs")
-  end
+		vim.cmd("K9sLogs " .. resource_type .. "/" .. name)
+	else
+		vim.notify("Could not detect kubernetes resource in file", vim.log.levels.WARN)
+		vim.cmd("K9sLogs")
+	end
 end, { desc = "View logs for resource in current file" })
 
 -- Apply current file
 km.set("n", "<leader>oka", function()
-  -- Get the file path
-  local filepath = vim.fn.expand("%:p")
+	-- Get the file path
+	local filepath = vim.fn.expand("%:p")
 
-  -- Check if file exists and is yaml/json
-  local filetype = vim.bo.filetype
-  if filetype ~= "yaml" and filetype ~= "json" then
-    vim.notify("Current file is not YAML or JSON", vim.log.levels.WARN)
-    return
-  end
+	-- Check if file exists and is yaml/json
+	local filetype = vim.bo.filetype
+	if filetype ~= "yaml" and filetype ~= "json" then
+		vim.notify("Current file is not YAML or JSON", vim.log.levels.WARN)
+		return
+	end
 
-  -- Ask for confirmation
-  vim.ui.select({ "Yes", "No" }, {
-    prompt = "Apply " .. vim.fn.expand("%:t") .. "?",
-  }, function(choice)
-    if choice == "Yes" then
-      -- Use dry-run first
-      local cmd_dryrun = string.format("kubectl apply --dry-run=client -f %s", filepath)
+	-- Ask for confirmation
+	vim.ui.select({ "Yes", "No" }, {
+		prompt = "Apply " .. vim.fn.expand("%:t") .. "?",
+	}, function(choice)
+		if choice == "Yes" then
+			-- Use dry-run first
+			local cmd_dryrun = string.format("kubectl apply --dry-run=client -f %s", filepath)
 
-      local handle = io.popen(cmd_dryrun .. " 2>&1")
-      if not handle then
-        vim.notify("Failed to execute kubectl apply dry-run", vim.log.levels.ERROR)
-        return
-      end
+			local handle = io.popen(cmd_dryrun .. " 2>&1")
+			if not handle then
+				vim.notify("Failed to execute kubectl apply dry-run", vim.log.levels.ERROR)
+				return
+			end
 
-      local result = handle:read("*a")
-      handle:close()
+			local result = handle:read("*a")
+			handle:close()
 
-      -- Check if dry-run succeeded
-      if result:find("Error") or result:find("error") then
-        vim.notify("Dry-run failed: " .. result, vim.log.levels.ERROR)
-        return
-      end
+			-- Check if dry-run succeeded
+			if result:find("Error") or result:find("error") then
+				vim.notify("Dry-run failed: " .. result, vim.log.levels.ERROR)
+				return
+			end
 
-      -- Now do the actual apply
-      local cmd = string.format("kubectl apply -f %s", filepath)
+			-- Now do the actual apply
+			local cmd = string.format("kubectl apply -f %s", filepath)
 
-      handle = io.popen(cmd .. " 2>&1")
-      if not handle then
-        vim.notify("Failed to execute kubectl apply", vim.log.levels.ERROR)
-        return
-      end
+			handle = io.popen(cmd .. " 2>&1")
+			if not handle then
+				vim.notify("Failed to execute kubectl apply", vim.log.levels.ERROR)
+				return
+			end
 
-      result = handle:read("*a")
-      handle:close()
+			result = handle:read("*a")
+			handle:close()
 
-      -- Notify about the result
-      if result:find("Error") or result:find("error") then
-        vim.notify("Apply failed: " .. result, vim.log.levels.ERROR)
-      else
-        vim.notify("Applied: " .. result, vim.log.levels.INFO)
-      end
-    end
-  end)
+			-- Notify about the result
+			if result:find("Error") or result:find("error") then
+				vim.notify("Apply failed: " .. result, vim.log.levels.ERROR)
+			else
+				vim.notify("Applied: " .. result, vim.log.levels.INFO)
+			end
+		end
+	end)
 end, { desc = "Apply current kubernetes manifest" })
 
 -- Navigate to Kubernetes directory
 km.set("n", "<leader>cok", function()
-  -- Navigate to Kubernetes directory
-  local k8s_dirs = { "./k8s", "../k8s", "./kubernetes", "../kubernetes", "./helm", "../helm" }
-  for _, dir in ipairs(k8s_dirs) do
-    if vim.fn.isdirectory(dir) == 1 then
-      vim.cmd("cd " .. dir)
-      vim.notify("Changed to " .. dir, vim.log.levels.INFO)
-      return
-    end
-  end
-  vim.notify("No Kubernetes directory found", vim.log.levels.WARN)
+	-- Navigate to Kubernetes directory
+	local k8s_dirs = { "./k8s", "../k8s", "./kubernetes", "../kubernetes", "./helm", "../helm" }
+	for _, dir in ipairs(k8s_dirs) do
+		if vim.fn.isdirectory(dir) == 1 then
+			vim.cmd("cd " .. dir)
+			vim.notify("Changed to " .. dir, vim.log.levels.INFO)
+			return
+		end
+	end
+	vim.notify("No Kubernetes directory found", vim.log.levels.WARN)
 end, { desc = "Change to Kubernetes directory" })
 
 return {}
