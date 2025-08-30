@@ -25,7 +25,6 @@ km.set("n", "<leader>ce", vim.diagnostic.open_float, { desc = "Show diagnostic m
 km.set("n", "<leader>cq", vim.diagnostic.setloclist, { desc = "Open diagnostic list" }) -- Changed from q to cq
 
 -- Search operations - move to search group
-km.set("n", "<leader>s", "<nop>", { desc = "Search Operations" })
 km.set("n", "<leader>sr", function()
 	if require("spectre") then
 		require("spectre").open()
@@ -38,7 +37,6 @@ km.set("n", "<leader>sw", "<cmd>Telescope grep_string<CR>", { desc = "Search wor
 km.set("n", "<leader>sn", "<cmd>Telescope notify<CR>", { desc = "Search notifications" })
 
 -- Trouble diagnostics - move under separate section
-km.set("n", "<leader>x", "<nop>", { desc = "Trouble/Diagnostics" })
 km.set("n", "<leader>xx", function()
 	if require("trouble") then
 		require("trouble").toggle()
