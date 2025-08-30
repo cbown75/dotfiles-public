@@ -136,4 +136,16 @@ km.set("n", "<leader>md", function()
 	vim.api.nvim_feedkeys("o", "n", true)
 end, { desc = "Insert Date" })
 
+-- Quickfix
+km.set("n", "<leader>qo", "<cmd>copen<CR>", { desc = "Open quickfix" })
+km.set("n", "<leader>qc", "<cmd>cclose<CR>", { desc = "Close quickfix" })
+km.set("n", "]q", "<cmd>cnext<CR>", { desc = "Next quickfix" })
+km.set("n", "[q", "<cmd>cprev<CR>", { desc = "Previous quickfix" })
+
+-- Location list
+km.set("n", "<leader>lo", "<cmd>lopen<CR>", { desc = "Open location list" })
+km.set("n", "<leader>lc", "<cmd>lclose<CR>", { desc = "Close location list" })
+km.set("n", "]l", "<cmd>lnext<CR>", { desc = "Next location" })
+km.set("n", "[l", "<cmd>lprev<CR>", { desc = "Previous location" })
+
 return {}
