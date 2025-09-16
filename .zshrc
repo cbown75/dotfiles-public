@@ -34,6 +34,11 @@ if [[ ! -d ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-autosuggestion
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-autosuggestions
 fi
 
+export PATH="$HOME/go/bin:$PATH"
+if [ ! -f "$HOME/go/bin/mcp-grafana" ] && command -v go &> /dev/null; then
+    go install github.com/grafana/mcp-grafana/cmd/mcp-grafana@latest
+fi
+
 export KUEBCONFIG="~/.kube/config"
 
 # history setup
