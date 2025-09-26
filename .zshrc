@@ -1,9 +1,6 @@
-if [[ -d "/opt/homebrew" ]]; then
-  export PATH=/opt/homebrew:$PATH && export HOMEBREW_PREFIX=$(brew --prefix)
-fi
-
 if [[ -d "/opt/homebrew/bin" ]]; then
-  export PATH=/opt/homebrew/bin:$PATH && export HOMEBREW_PREFIX=$(brew --prefix)
+  export PATH="/opt/homebrew/bin:$PATH"
+  export HOMEBREW_PREFIX="/opt/homebrew"
 fi
 
 export PATH=$HOME/bin:/usr/local/sbin:/usr/local/bin:$HOME/.cargo/bin:/opt/homebrew/opt/openjdk/bin:$HOME/.local/bin:$PATH
@@ -39,7 +36,7 @@ if [ ! -f "$HOME/go/bin/mcp-grafana" ] && command -v go &> /dev/null; then
     go install github.com/grafana/mcp-grafana/cmd/mcp-grafana@latest
 fi
 
-export KUEBCONFIG="~/.kube/config"
+export KUEBCONFIG="$HOME/.kube/config"
 
 # history setup
 HISTFILE=$HOME/.zhistory
@@ -107,9 +104,11 @@ eval "$(pyenv init -)"
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 
-PATH="/Users/cbown/perl5/bin${PATH:+:${PATH}}"; export PATH;
-PERL5LIB="/Users/cbown/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="/Users/cbown/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"/Users/cbown/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=/Users/cbown/perl5"; export PERL_MM_OPT;
+# Set Perl local lib paths
+PERL5_LOCAL="$HOME/perl5"
+PATH="$PERL5_LOCAL/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="$PERL5_LOCAL/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="$PERL5_LOCAL${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"$PERL5_LOCAL\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=$PERL5_LOCAL"; export PERL_MM_OPT;
 export PATH="$HOME/go/bin:$PATH"
