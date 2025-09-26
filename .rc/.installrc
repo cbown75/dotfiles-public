@@ -5,155 +5,153 @@
 # Source this file from your shell startup file to enable auto-checking
 
 check_and_install_nvim_tools() {
-    local tools_to_install=()
-    local missing_count=0
+  local tools_to_install=()
+  local missing_count=0
 
-    echo "Checking Neovim development tools..."
+  echo "Checking Neovim development tools..."
 
-    # Check command-line tools
-    local tools=(
-        "black:pip install --user black:Python formatter"
-        "isort:pip install --user isort:Python import sorter"
-        "prettier:npm install -g prettier:JavaScript/TypeScript formatter"
-        "rustfmt:rustup component add rustfmt:Rust formatter"
-        "taplo:cargo install taplo-cli:TOML formatter"
-        "goimports:go install golang.org/x/tools/cmd/goimports@latest:Go import formatter"
-        "tree-sitter:npm install -g tree-sitter-cli:TreeSitter CLI"
-        "utftex:pipx install utftex:LaTeX to text converter"
-        "mmdc:npm install -g @mermaid-js/mermaid-cli:Mermaid diagram CLI"
-    )
+  # Check command-line tools
+  local tools=(
+    "black:pip install --user black:Python formatter"
+    "isort:pip install --user isort:Python import sorter"
+    "prettier:npm install -g prettier:JavaScript/TypeScript formatter"
+    "rustfmt:rustup component add rustfmt:Rust formatter"
+    "taplo:cargo install taplo-cli:TOML formatter"
+    "goimports:go install golang.org/x/tools/cmd/goimports@latest:Go import formatter"
+    "tree-sitter:npm install -g tree-sitter-cli:TreeSitter CLI"
+    "utftex:pipx install utftex:LaTeX to text converter"
+    "mmdc:npm install -g @mermaid-js/mermaid-cli:Mermaid diagram CLI"
+  )
 
-    # Check each tool
-    for tool_info in "${tools[@]}"; do
-        IFS=':' read -r tool_name install_cmd description <<< "$tool_info"
-        
-        if ! command -v "$tool_name" &> /dev/null; then
-            echo "[MISSING] $tool_name ($description)"
-            tools_to_install+=("$tool_name:$install_cmd:$description")
-            ((missing_count++))
-        else
-            echo "[OK] Found: $tool_name"
-        fi
-    done
+  # Check each tool
+  for tool_info in "${tools[@]}"; do
+    IFS=':' read -r tool_name install_cmd description <<<"$tool_info"
 
-    # Check special cases that aren't simple commands
-    
-    # Check neovim npm package
-    if ! npm list -g neovim &> /dev/null; then
-        echo "[MISSING] neovim npm package (Node.js support for Neovim)"
-        tools_to_install+=("neovim-npm:npm install -g neovim:Node.js support for Neovim")
-        ((missing_count++))
+    if ! command -v "$tool_name" &>/dev/null; then
+      echo "[MISSING] $tool_name ($description)"
+      tools_to_install+=("$tool_name:$install_cmd:$description")
+      ((missing_count++))
     else
-        echo "[OK] Found: neovim npm package"
+      echo "[OK] Found: $tool_name"
     fi
+  done
 
-    # Check if jsregexp is available to Neovim (more complex check)
-    if command -v nvim &> /dev/null; then
-        if ! nvim --headless -c "lua local ok = pcall(require, 'jsregexp'); if not ok then vim.cmd('cquit 1') end" -c "qall" 2>/dev/null; then
-            echo "[MISSING] jsregexp Lua library (Advanced snippet transformations)"
-            tools_to_install+=("jsregexp:luarocks --local --lua-version=5.1 install jsregexp:Lua regex library for snippets")
-            ((missing_count++))
-        else
-            echo "[OK] Found: jsregexp Lua library"
-        fi
-    fi
+  # Check special cases that aren't simple commands
 
-    # Install missing tools if any
-    if [ ${#tools_to_install[@]} -eq 0 ]; then
-        echo "All Neovim development tools are installed!"
-        return 0
+  # Check neovim npm package
+  if ! npm list -g neovim &>/dev/null; then
+    echo "[MISSING] neovim npm package (Node.js support for Neovim)"
+    tools_to_install+=("neovim-npm:npm install -g neovim:Node.js support for Neovim")
+    ((missing_count++))
+  else
+    echo "[OK] Found: neovim npm package"
+  fi
+
+  # Check if jsregexp is available to Neovim (more complex check)
+  if command -v nvim &>/dev/null; then
+    if ! nvim --headless -c "lua local ok = pcall(require, 'jsregexp'); if not ok then vim.cmd('cquit 1') end" -c "qall" 2>/dev/null; then
+      echo "[MISSING] jsregexp Lua library (Advanced snippet transformations)"
+      tools_to_install+=("jsregexp:luarocks --local --lua-version=5.1 install jsregexp:Lua regex library for snippets")
+      ((missing_count++))
+    else
+      echo "[OK] Found: jsregexp Lua library"
     fi
+  fi
+
+  # Install missing tools if any
+  if [ ${#tools_to_install[@]} -eq 0 ]; then
+    echo "All Neovim development tools are installed!"
+    return 0
+  fi
+
+  echo ""
+  echo "Found $missing_count missing tools. Install them now? (y/N)"
+  read -r response
+
+  if [[ ! "$response" =~ ^[Yy]$ ]]; then
+    echo "Skipping installation. Run this function again anytime to install missing tools."
+    return 0
+  fi
+
+  echo ""
+  echo "Installing missing tools..."
+
+  # Install each missing tool
+  for tool_info in "${tools_to_install[@]}"; do
+    IFS=':' read -r tool_name install_cmd description <<<"$tool_info"
 
     echo ""
-    echo "Found $missing_count missing tools. Install them now? (y/N)"
-    read -r response
-    
-    if [[ ! "$response" =~ ^[Yy]$ ]]; then
-        echo "Skipping installation. Run this function again anytime to install missing tools."
-        return 0
+    echo "Installing $tool_name ($description)..."
+
+    # Handle special installation cases
+    case "$tool_name" in
+    "rustfmt")
+      if ! command -v rustup &>/dev/null; then
+        echo "WARNING: Rust not found. Installing Rust first..."
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        source "$HOME/.cargo/env"
+      fi
+      eval "$install_cmd"
+      ;;
+    "utftex")
+      if ! command -v pipx &>/dev/null; then
+        echo "WARNING: pipx not found. Installing pipx first..."
+        python3 -m pip install --user pipx
+        python3 -m pipx ensurepath
+      fi
+      eval "$install_cmd"
+      ;;
+    "taplo")
+      if ! command -v cargo &>/dev/null; then
+        echo "WARNING: Cargo not found. Please install Rust first."
+        continue
+      fi
+      eval "$install_cmd"
+      ;;
+    "jsregexp")
+      # First try to install lua5.1 if needed
+      if ! command -v lua5.1 &>/dev/null; then
+        echo "WARNING: lua5.1 not found. You may need to install it manually."
+      fi
+      eval "$install_cmd"
+      ;;
+    *)
+      eval "$install_cmd"
+      ;;
+    esac
+
+    if [ $? -eq 0 ]; then
+      echo "[OK] Successfully installed $tool_name"
+    else
+      echo "[FAILED] Failed to install $tool_name"
     fi
+  done
 
-    echo ""
-    echo "Installing missing tools..."
-
-    # Install each missing tool
-    for tool_info in "${tools_to_install[@]}"; do
-        IFS=':' read -r tool_name install_cmd description <<< "$tool_info"
-        
-        echo ""
-        echo "Installing $tool_name ($description)..."
-        
-        # Handle special installation cases
-        case "$tool_name" in
-            "rustfmt")
-                if ! command -v rustup &> /dev/null; then
-                    echo "WARNING: Rust not found. Installing Rust first..."
-                    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-                    source "$HOME/.cargo/env"
-                fi
-                eval "$install_cmd"
-                ;;
-            "utftex")
-                if ! command -v pipx &> /dev/null; then
-                    echo "WARNING: pipx not found. Installing pipx first..."
-                    python3 -m pip install --user pipx
-                    python3 -m pipx ensurepath
-                fi
-                eval "$install_cmd"
-                ;;
-            "taplo")
-                if ! command -v cargo &> /dev/null; then
-                    echo "WARNING: Cargo not found. Please install Rust first."
-                    continue
-                fi
-                eval "$install_cmd"
-                ;;
-            "jsregexp")
-                # First try to install lua5.1 if needed
-                if ! command -v lua5.1 &> /dev/null; then
-                    echo "WARNING: lua5.1 not found. You may need to install it manually."
-                fi
-                eval "$install_cmd"
-                ;;
-            *)
-                eval "$install_cmd"
-                ;;
-        esac
-
-        if [ $? -eq 0 ]; then
-            echo "[OK] Successfully installed $tool_name"
-        else
-            echo "[FAILED] Failed to install $tool_name"
-        fi
-    done
-
-    echo ""
-    echo "Installation complete! Restart your terminal or run 'source ~/.bashrc' (or ~/.zshrc)"
-    echo "NOTE: Then run ':checkhealth' in Neovim to verify everything is working."
+  echo ""
+  echo "Installation complete! Restart your terminal or run 'source ~/.bashrc' (or ~/.zshrc)"
+  echo "NOTE: Then run ':checkhealth' in Neovim to verify everything is working."
 }
 
 # Function to add to PATH if needed
 ensure_tool_paths() {
-    # Add common tool paths
-    local paths_to_add=(
-        "$HOME/.local/bin"
-        "$HOME/.cargo/bin"
-        "$HOME/go/bin"
-        "/opt/homebrew/bin"
-        "$HOME/.luarocks/bin"
-    )
+  # Add common tool paths
+  local paths_to_add=(
+    "$HOME/.local/bin"
+    "$HOME/.cargo/bin"
+    "$HOME/go/bin"
+    "/opt/homebrew/bin"
+    "$HOME/.luarocks/bin"
+  )
 
-    for path in "${paths_to_add[@]}"; do
-        if [ -d "$path" ] && [[ ":$PATH:" != *":$path:"* ]]; then
-            export PATH="$path:$PATH"
-        fi
-    done
+  for path in "${paths_to_add[@]}"; do
+    if [ -d "$path" ] && [[ ":$PATH:" != *":$path:"* ]]; then
+      export PATH="$path:$PATH"
+    fi
+  done
 }
 
 # Uncomment the line below to run the check automatically on terminal start
 # check_and_install_nvim_tools
 
 # Always ensure paths are set
-ensure_tool_paths
-
-echo "NOTE: Run 'check_and_install_nvim_tools' to check and install Neovim development tools"
+#ensure_tool_paths
