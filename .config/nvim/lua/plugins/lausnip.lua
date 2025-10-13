@@ -1,5 +1,6 @@
 return {
 	"L3MON4D3/LuaSnip",
+	build = "make install_jsregexp",
 	dependencies = {
 		"rafamadriz/friendly-snippets", -- Community snippet collection
 		"saadparwaiz1/cmp_luasnip", -- Integration with nvim-cmp
