@@ -94,6 +94,9 @@ fi
 if [ -r ~/.private/.cloudflarerc ]; then 
   source ~/.private/.cloudflarerc
 fi
+if [ -r ~/.private/.privaterc ]; then
+  source ~/.private/.privaterc
+fi
 if [ -r ~/.private/.spaceliftrc ]; then
   source ~/.private/.spaceliftrc
 fi
