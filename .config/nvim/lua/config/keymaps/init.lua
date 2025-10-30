@@ -9,6 +9,7 @@ function M.load()
   require("config.keymaps.lsp")
   require("config.keymaps.navigation")
   require("config.keymaps.tmux")
+  require("config.keymaps.oil")
 end
 
 return M

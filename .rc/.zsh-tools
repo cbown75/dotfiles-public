@@ -1,0 +1,27 @@
+#!/bin/zsh
+# Tool Initialization (.rc/.zsh-tools)
+# Initialize all development and shell enhancement tools
+
+# pyenv - Python version management
+if command -v pyenv &>/dev/null; then
+  export PYENV_ROOT="$HOME/.pyenv"
+  eval "$(pyenv init -)"
+fi
+
+# fzf - Fuzzy finder integration
+if command -v fzf &>/dev/null; then
+  eval "$(fzf --zsh)"
+fi
+
+# zoxide - Smart cd replacement (overrides cd command)
+if command -v zoxide &>/dev/null; then
+  eval "$(zoxide init --cmd cd zsh)"
+fi
+
+# direnv - Per-directory environment variables (if installed)
+if command -v direnv &>/dev/null; then
+  eval "$(direnv hook zsh)"
+fi
+
+# Note: Additional tool initializations can be added here
+# Examples: rbenv, nvm, kubectl completion, gh completion, etc.
