@@ -6,10 +6,12 @@ return {
     labels = "abcdefghijklmnopqrstuvwxyz",
     -- Show search prompt
     search = {
-      -- Set the default forward search to case insensitive
-      mode = function(str)
-        return { search = str, forward = true, wrap = true, mode = "ignore-case" }
-      end,
+      -- search/jump/select mode for operators
+      mode = "exact",
+      -- when `false`, find only matches in the given direction
+      forward = true,
+      -- wrap around when at the end of the buffer
+      wrap = true,
     },
     -- These are the default jump modes for Flash
     jump = {

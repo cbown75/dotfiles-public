@@ -27,5 +27,10 @@ alias lt='eza --tree --level=2 --long --icons --git'
 
 alias docker-ua='docker images --format "{{.Repository}}:{{.Tag}}" | grep -v "<none>" | xargs -L1 docker pull'
 
+# PractiScore match results scraper
+alias practiscore='(cd ~/.local/scripts/practiscore-scraper && node scraper.js 2>/dev/null | node create-obsidian-note.js)'
+alias practiscore-debug='(cd ~/.local/scripts/practiscore-scraper && node scraper.js 2>&1)'
+alias practiscore-json='(cd ~/.local/scripts/practiscore-scraper && node scraper.js 2>/dev/null | jq ".[0]")'
+
 export obyt='/Users/cbown75/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Obsidian/Resources/Media/Youtube/NeedsOrganized'
 

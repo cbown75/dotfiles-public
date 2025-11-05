@@ -5,10 +5,28 @@ return {
 	---@type snacks.Config
 	opts = {
 		bigfile = { enabled = true },
-		dashboard = { enabled = true },
+		dashboard = {
+			enabled = true,
+			sections = {
+				{ section = "header" },
+				{ section = "keys", gap = 1, padding = 1 },
+				{ section = "startup" },
+			},
+			preset = {
+				header = [[
+
+   ██╗  ██╗██╗   ██╗███████╗██╗  ██╗███████╗██████╗       ██╗   ██╗██╗███╗   ███╗
+   ██║  ██║██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗      ██║   ██║██║████╗ ████║
+   ███████║██║   ██║███████╗█████╔╝ █████╗  ██████╔╝█████╗██║   ██║██║██╔████╔██║
+   ██╔══██║██║   ██║╚════██║██╔═██╗ ██╔══╝  ██╔══██╗╚════╝╚██╗ ██╔╝██║██║╚██╔╝██║
+   ██║  ██║╚██████╔╝███████║██║  ██╗███████╗██║  ██║       ╚████╔╝ ██║██║ ╚═╝ ██║
+   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝        ╚═══╝  ╚═╝╚═╝     ╚═╝
+]],
+			},
+		},
 		image = { enabled = true },
 		indent = { enabled = true },
-		input = { enabled = false },
+		input = { enabled = true },
 		notifier = {
 			enabled = true,
 			timeout = 3000,
@@ -16,8 +34,9 @@ return {
 		quickfile = { enabled = true },
 		scroll = { enabled = true },
 		statuscolumn = { enabled = true },
+		terminal = { enabled = true },
 		words = { enabled = true },
-		lazygit = { enabled = true }, -- Ensure lazygit is enabled
+		lazygit = { enabled = true },
 		styles = {
 			notification = {
 				-- wo = { wrap = true } -- Wrap notifications
