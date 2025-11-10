@@ -16,7 +16,7 @@ alias cdg='cd ~/git'
 alias cdt='cd ~/git/terraform'
 alias cdk='cd ~/git/kubernetes'
 alias cddp='cd ~/.dotfiles-public'
-alias cdo='cd "/Users/cbown/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian"'
+alias cdo='cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Obsidian'
 
 alias brews='brew update && brew bundle -v --file ~/Brewfile && brew upgrade && brew cleanup'
 
