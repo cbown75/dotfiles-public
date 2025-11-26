@@ -24,6 +24,7 @@ add_to_path "$HOME/.cargo/bin"
 add_to_path "/opt/homebrew/opt/openjdk/bin"
 add_to_path "$HOME/go/bin"
 add_to_path "$HOME/perl5/bin"
+add_to_path "/opt/homebrew/opt/libpq/bin"
 # Note: pyenv/bin path is added by 'pyenv init' in .rc/.zsh-tools
 
 # Source auto-installation script for Oh My Zsh and plugins
