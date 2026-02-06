@@ -20,6 +20,9 @@ alias cdo='cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Obsidian'
 
 alias brews='brew update && brew bundle -v --file ~/Brewfile && brew upgrade && brew cleanup'
 
+# Claude Code
+alias crdly='claude --dangerously-skip-permissions'
+
 alias goodmorning='brews && cdd && gl && cdt && gl && cddp && gl && cdk && gl && cdg'
 
 alias ls='eza -la --git --icons'
