@@ -1,0 +1,42 @@
+# ============================================================
+# Custom ZSH Functions
+# ============================================================
+
+# nic - Neovim + AI + Terminal workspace
+# Creates a tmux session with:
+#   Left (60%): Neovim (opens in ~/git)
+#   Right top (40%): Claude Code (opens in ~)
+#   Right bottom (15%): Terminal
+#
+# Inspired by DHH's Omarchy workflow / Adib Hanna's setup
+# Usage: nic [session-name]
+nic() {
+  local session_name="${1:-dev}"
+
+  # If session exists, attach to it
+  if tmux has-session -t "$session_name" 2>/dev/null; then
+    tmux attach-session -t "$session_name"
+    return
+  fi
+
+  # Create new session with neovim pane in ~/git
+  tmux new-session -d -s "$session_name" -c "$HOME/git" -x "$(tput cols)" -y "$(tput lines)"
+
+  # Split right pane (40%) for Claude Code, starting in ~
+  tmux split-window -h -l 40% -t "$session_name" -c "$HOME"
+
+  # Split the right pane for a small terminal below Claude
+  tmux split-window -v -l 15% -t "$session_name" -c "$HOME"
+
+  # Start neovim in the left pane
+  tmux send-keys -t "$session_name:0.0" "nvim ." Enter
+
+  # Start Claude Code in the right top pane
+  tmux send-keys -t "$session_name:0.1" "crdly" Enter
+
+  # Focus the neovim pane
+  tmux select-pane -t "$session_name:0.0"
+
+  # Attach
+  tmux attach-session -t "$session_name"
+}

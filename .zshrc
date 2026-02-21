@@ -86,6 +86,7 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -la --git --icons $realpath'
 [[ -r ~/.private/.privaterc ]] && source ~/.private/.privaterc
 [[ -r ~/.private/.spaceliftrc ]] && source ~/.private/.spaceliftrc
 [[ -r ~/.private/.stratusrc ]] && source ~/.private/.stratusrc
+[[ -r ~/.rc/.zsh-functions ]] && source ~/.rc/.zsh-functions
 [[ -r ~/.rc/.fabricrc ]] && source ~/.rc/.fabricrc
 [[ -r ~/.rc/.installrc ]] && source ~/.rc/.installrc
 
