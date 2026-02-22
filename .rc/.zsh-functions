@@ -3,10 +3,17 @@
 # ============================================================
 
 # nic - Neovim + AI + Terminal workspace
-# Creates a tmux session with:
-#   Left (60%): Neovim (opens in ~/git)
-#   Right top (40%): Claude Code (opens in ~)
-#   Right bottom (15%): Terminal
+# Creates a tmux session with display-aware layout:
+#
+# MacBook / small screen (<= 300 cols):
+#   Left (60%): Neovim full height (opens in ~/git)
+#   Right top (70%): Claude Code (opens in ~)
+#   Right bottom (30%): Terminal
+#
+# Large display (> 300 cols):
+#   Top left (50%): Neovim (opens in ~/git)
+#   Top right (50%): Claude Code (opens in ~)
+#   Bottom (20%): Terminal (full width)
 #
 # Inspired by DHH's Omarchy workflow / Adib Hanna's setup
 # Usage: nic [session-name]
@@ -19,24 +26,27 @@ nic() {
     return
   fi
 
-  # Create new session with neovim pane in ~/git
+  local cols=$(tput cols)
+
   tmux new-session -d -s "$session_name" -c "$HOME/git" -x "$(tput cols)" -y "$(tput lines)"
 
-  # Split right pane (40%) for Claude Code, starting in ~
-  tmux split-window -h -l 40% -t "$session_name" -c "$HOME"
+  if [[ $cols -gt 300 ]]; then
+    # Large display: terminal strip across bottom, nvim+claude on top
+    tmux split-window -v -l 20% -t "$session_name" -c "$HOME"
+    tmux select-pane -t "$session_name:0.0"
+    tmux split-window -h -l 50% -t "$session_name" -c "$HOME"
+    # Pane 0: nvim (top-left), Pane 1: claude (top-right), Pane 2: terminal (bottom)
+    tmux send-keys -t "$session_name:0.0" "nvim ." Enter
+    tmux send-keys -t "$session_name:0.1" "crdly" Enter
+  else
+    # MacBook: nvim full height left, claude+terminal stacked right
+    tmux split-window -h -l 40% -t "$session_name" -c "$HOME"
+    tmux split-window -v -l 30% -t "$session_name" -c "$HOME"
+    # Pane 0: nvim (left), Pane 1: claude (top-right), Pane 2: terminal (bottom-right)
+    tmux send-keys -t "$session_name:0.0" "nvim ." Enter
+    tmux send-keys -t "$session_name:0.1" "crdly" Enter
+  fi
 
-  # Split the right pane for a small terminal below Claude
-  tmux split-window -v -l 15% -t "$session_name" -c "$HOME"
-
-  # Start neovim in the left pane
-  tmux send-keys -t "$session_name:0.0" "nvim ." Enter
-
-  # Start Claude Code in the right top pane
-  tmux send-keys -t "$session_name:0.1" "crdly" Enter
-
-  # Focus the neovim pane
   tmux select-pane -t "$session_name:0.0"
-
-  # Attach
   tmux attach-session -t "$session_name"
 }
