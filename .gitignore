@@ -53,3 +53,13 @@ package.json
 .config/tmux/plugins
 .config/nvim/.DS_Store
 .DS_Store
+
+# Raycast (contains access tokens)
+.config/raycast/config.json
+
+# Fabric (secrets and reproducible downloaded content)
+.config/fabric/.env
+.config/fabric/patterns/
+.config/fabric/contexts/
+.config/fabric/sessions/
+.config/fabric/extensions/
