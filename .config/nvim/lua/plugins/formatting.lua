@@ -7,10 +7,10 @@ return {
 
     conform.setup({
       formatters_by_ft = {
-        -- DevOps Infrastructure as Code
-        terraform = { "terraform_fmt" },
-        ["terraform-vars"] = { "terraform_fmt" },
-        hcl = { "terraform_fmt" },
+        -- DevOps Infrastructure as Code (OpenTofu)
+        terraform = { "tofu_fmt" },
+        ["terraform-vars"] = { "tofu_fmt" },
+        hcl = { "tofu_fmt" },
 
         -- Kubernetes & Helm
         yaml = { "yamlfmt" },
@@ -48,6 +48,11 @@ return {
       formatters = {
         shfmt = {
           prepend_args = { "-i", "4" }, -- 4 spaces for shell scripts
+        },
+        tofu_fmt = {
+          command = "tofu",
+          args = { "fmt", "-" },
+          stdin = true,
         },
       },
 

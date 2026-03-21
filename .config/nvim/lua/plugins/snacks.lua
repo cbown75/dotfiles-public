@@ -7,23 +7,13 @@ return {
 		bigfile = { enabled = true },
 		dashboard = {
 			enabled = true,
-			pane_gap = 1,  -- reduce space between panes (default is 4)
 			sections = {
 				{
-					pane = 1,
-					{
-						section = "terminal",
-						cmd = "chafa ~/.config/nvim/herbie_husker_logo.png --format symbols --symbols vhalf --size 30x43 --clear; sleep .1",
-						height = 43,
-						padding = 1,
-						align = "center",
-					},
+					section = "header",
+					padding = 1,
 				},
-				{
-					pane = 2,
-					{ section = "keys", gap = 1, padding = 1 },
-					{ section = "startup" },
-				},
+				{ section = "keys", gap = 1, padding = 1 },
+				{ section = "startup" },
 			},
 		},
 		image = { enabled = true },
