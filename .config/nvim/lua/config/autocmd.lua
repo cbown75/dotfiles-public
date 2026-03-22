@@ -73,7 +73,7 @@ vim.api.nvim_create_autocmd("CursorMoved", {
 		if not _G.scroll_state then
 			_G.scroll_state = {
 				is_scrolling = false,
-				timer = vim.loop.new_timer(),
+				timer = vim.uv.new_timer(),
 			}
 		end
 
@@ -135,7 +135,7 @@ vim.api.nvim_create_autocmd({ "BufReadPost" }, {
 	callback = function()
 		-- Skip binary files and large files
 		local max_filesize = 100 * 1024 -- 100 KB
-		local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(0))
+		local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(0))
 		if not ok or stats.size > max_filesize then
 			return
 		end

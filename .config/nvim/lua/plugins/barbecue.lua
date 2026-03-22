@@ -47,7 +47,7 @@ return {
 		-- Create optimization variables
 		local optimize = {
 			is_scrolling = false,
-			timer = vim.loop.new_timer(),
+			timer = vim.uv.new_timer(),
 			last_update = 0,
 			update_interval = 300, -- ms
 			cached_contexts = {},
@@ -66,7 +66,7 @@ return {
 			end
 
 			-- Skip large files
-			local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(bufnr))
+			local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(bufnr))
 			if ok and stats and stats.size > optimize.max_file_size then
 				return
 			end
@@ -77,7 +77,7 @@ return {
 			end
 
 			-- Throttle updates (don't update too frequently)
-			local now = vim.loop.now()
+			local now = vim.uv.now()
 			if now - optimize.last_update < optimize.update_interval then
 				return
 			end

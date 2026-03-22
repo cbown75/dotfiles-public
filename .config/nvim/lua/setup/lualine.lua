@@ -70,7 +70,7 @@ local mode_colors = {
 
 -- Performance optimization: Add a global scrolling detection
 local is_scrolling = false
-local scroll_timer = vim.loop.new_timer()
+local scroll_timer = vim.uv.new_timer()
 
 -- Caches for expensive operations
 local git_cache = { value = "", last_check = 0 }
@@ -574,7 +574,7 @@ vim.api.nvim_create_autocmd("RecordingLeave", {
     -- still show a recording occuring because `vim.fn.reg_recording` hasn't emptied yet.
     -- So what we need to do is wait a tiny amount of time (in this instance 50 ms) to
     -- ensure `vim.fn.reg_recording` is purged before asking lualine to refresh.
-    local timer = vim.loop.new_timer()
+    local timer = vim.uv.new_timer()
     timer:start(
       50,
       0,

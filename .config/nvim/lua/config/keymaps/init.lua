@@ -1,14 +1,3 @@
-local M = {}
-
-function M.load()
-  require("config.keymaps.core")
-  require("config.keymaps.devops")
-  require("config.keymaps.kubernetes")
-  require("config.keymaps.git")
-  require("config.keymaps.lsp")
-  require("config.keymaps.navigation")
-  require("config.keymaps.tmux")
-  require("config.keymaps.oil")
-end
-
-return M
+-- Keymap modules are loaded by config/keymaps.lua via setup()
+-- This file exists only to prevent "module not found" if something requires this path
+return {}

@@ -7,6 +7,7 @@ local modules = {
 	"navigation", -- Window and navigation
 	"lsp", -- LSP and diagnostics
 	"git", -- Git operations
+	"opencode", -- AI assistant
 	"devops", -- Overall DevOps functionality (using <leader>o prefix)
 	"kubernetes", -- Kubernetes specific (now under ok prefix)
 	"terraform", -- Terraform specific (now under ot prefix)
