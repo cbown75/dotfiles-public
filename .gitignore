@@ -63,3 +63,4 @@ package.json
 .config/fabric/contexts/
 .config/fabric/sessions/
 .config/fabric/extensions/
+whats-next.md
