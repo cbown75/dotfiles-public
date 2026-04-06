@@ -60,3 +60,185 @@ nic() {
     tmux attach-session -t "$session_name"
   fi
 }
+
+# ============================================================
+# Git Worktree Functions
+# ============================================================
+
+# worktree-init - Convert a normal git clone to bare repo + worktree layout
+#
+# Before: ~/git/my-project/          (normal clone with .git/)
+# After:  ~/git/my-project/.bare/    (bare repo, shared objects)
+#         ~/git/my-project/.git       (file: "gitdir: .bare")
+#         ~/git/my-project/main/      (worktree checked out to main)
+#
+# Usage: worktree-init <repo-name> [base-dir]
+#   repo-name: directory name under base-dir (e.g., "my-project")
+#   base-dir:  parent directory (default: ~/git)
+worktree-init() {
+  local repo_name="$1"
+  local base_dir="${2:-$HOME/git}"
+  local repo_path="$base_dir/$repo_name"
+
+  if [[ -z "$repo_name" ]]; then
+    echo "Usage: worktree-init <repo-name> [base-dir]"
+    echo "  Converts ~/git/<repo-name> from normal clone to bare worktree layout."
+    return 1
+  fi
+
+  if [[ ! -d "$repo_path/.git" ]] || [[ -f "$repo_path/.git" ]]; then
+    echo "Error: $repo_path is not a normal git clone (no .git/ directory)."
+    return 1
+  fi
+
+  # Get the origin URL before we move anything
+  local origin_url
+  origin_url=$(git -C "$repo_path" remote get-url origin 2>/dev/null)
+  if [[ -z "$origin_url" ]]; then
+    echo "Error: No 'origin' remote found in $repo_path."
+    return 1
+  fi
+
+  # Check for uncommitted changes to tracked files (untracked files are preserved separately)
+  if [[ -n $(git -C "$repo_path" diff --name-only 2>/dev/null) ]] || [[ -n $(git -C "$repo_path" diff --cached --name-only 2>/dev/null) ]]; then
+    echo "Error: Modified or staged files in $repo_path. Commit or stash first."
+    return 1
+  fi
+
+  # Detect default branch
+  local default_branch
+  default_branch=$(git -C "$repo_path" symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||')
+  default_branch="${default_branch:-main}"
+
+  # Collect existing local branches (excluding default)
+  local branches=()
+  while IFS= read -r branch; do
+    [[ -n "$branch" ]] && [[ "$branch" != "$default_branch" ]] && branches+=("$branch")
+  done < <(git -C "$repo_path" branch --format='%(refname:short)' 2>/dev/null)
+
+  echo "Converting $repo_name to bare worktree layout..."
+  echo "  Origin: $origin_url"
+  echo "  Default branch: $default_branch"
+  [[ ${#branches[@]} -gt 0 ]] && echo "  Feature branches: ${branches[*]}"
+
+  # Step 1: Move existing clone aside
+  local migrating_path="$base_dir/${repo_name}.migrating"
+  mv "$repo_path" "$migrating_path" || { echo "Error: Failed to move $repo_path"; return 1; }
+
+  # Step 2: Create bare clone
+  mkdir -p "$repo_path"
+  git clone --bare "$origin_url" "$repo_path/.bare" || {
+    echo "Error: Bare clone failed. Restoring original..."
+    rm -rf "$repo_path"
+    mv "$migrating_path" "$repo_path"
+    return 1
+  }
+
+  # Step 3: Configure fetch refspec
+  git -C "$repo_path/.bare" config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+  git -C "$repo_path/.bare" fetch origin --quiet
+
+  # Step 4: Create .git file pointing to .bare
+  echo "gitdir: .bare" > "$repo_path/.git"
+
+  # Step 5: Create main worktree
+  git -C "$repo_path" worktree add "$repo_path/$default_branch" "$default_branch" 2>/dev/null || {
+    # Branch might not exist locally yet
+    git -C "$repo_path" worktree add "$repo_path/$default_branch" "origin/$default_branch" 2>/dev/null
+  }
+
+  # Step 5b: Preserve untracked files from old checkout into default worktree
+  local untracked_files
+  untracked_files=$(git -C "$migrating_path" ls-files --others --exclude-standard 2>/dev/null)
+  if [[ -n "$untracked_files" ]]; then
+    echo "  Preserving untracked files..."
+    while IFS= read -r f; do
+      local dest_dir="$repo_path/$default_branch/$(dirname "$f")"
+      mkdir -p "$dest_dir"
+      cp -a "$migrating_path/$f" "$repo_path/$default_branch/$f" 2>/dev/null && \
+        echo "    Preserved: $f"
+    done <<< "$untracked_files"
+  fi
+
+  # Step 6: Create worktrees for existing feature branches
+  for branch in "${branches[@]}"; do
+    local wt_name=$(echo "$branch" | grep -oE '^[A-Za-z]+-[0-9]+' | tr '[:upper:]' '[:lower:]')
+    wt_name="${wt_name:-$branch}"
+    echo "  Creating worktree: $wt_name -> $branch"
+    git -C "$repo_path" worktree add "$repo_path/$wt_name" "$branch" 2>/dev/null || \
+      echo "  Warning: Could not create worktree for $branch"
+  done
+
+  # Step 7: Remove migrating directory
+  rm -rf "$migrating_path"
+
+  echo ""
+  echo "Done. Layout:"
+  git -C "$repo_path" worktree list
+  echo ""
+  echo "cd $repo_path/$default_branch  # to start working"
+}
+
+# wt - Navigate between git worktrees or list them
+#
+# Usage:
+#   wt           # List all worktrees for current repo
+#   wt <name>    # cd to worktree by name (partial match)
+#   wt -c <name> # Create new worktree from origin/main
+wt() {
+  # Find the repo parent (bare repo root)
+  local git_common_dir toplevel repo_parent
+  git_common_dir=$(git rev-parse --git-common-dir 2>/dev/null)
+
+  if [[ -z "$git_common_dir" || "$git_common_dir" == ".git" ]]; then
+    # Might be in the parent directory with .git file
+    if [[ -f .git ]] && grep -q "gitdir: .bare" .git 2>/dev/null; then
+      repo_parent="$(pwd)"
+    else
+      echo "Not in a git worktree layout."
+      return 1
+    fi
+  else
+    # git_common_dir is absolute path to .bare/
+    repo_parent=$(dirname "$git_common_dir")
+  fi
+
+  if [[ "$1" == "-c" ]]; then
+    # Create mode
+    local name="$2"
+    if [[ -z "$name" ]]; then
+      echo "Usage: wt -c <name>"
+      return 1
+    fi
+    local wt_dir=$(echo "$name" | tr '[:upper:]' '[:lower:]')
+    git -C "$repo_parent" worktree add "$repo_parent/$wt_dir" -b "$name" "origin/main"
+    cd "$repo_parent/$wt_dir"
+    return
+  fi
+
+  if [[ -z "$1" ]]; then
+    # List mode
+    git -C "$repo_parent" worktree list
+    return
+  fi
+
+  # Navigate mode — find matching worktree
+  local target=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+  local match=""
+
+  while IFS= read -r wt_path; do
+    local wt_name=$(basename "$wt_path")
+    if [[ "$wt_name" == "$target" ]] || [[ "$wt_name" == *"$target"* ]]; then
+      match="$wt_path"
+      break
+    fi
+  done < <(git -C "$repo_parent" worktree list --porcelain | grep "^worktree " | sed 's/^worktree //')
+
+  if [[ -n "$match" ]]; then
+    cd "$match"
+  else
+    echo "No worktree matching '$1'. Available:"
+    git -C "$repo_parent" worktree list
+    return 1
+  fi
+}
