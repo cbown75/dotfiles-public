@@ -35,5 +35,6 @@ alias practiscore='(cd ~/.local/scripts/practiscore-scraper && node scraper.js 2
 alias practiscore-debug='(cd ~/.local/scripts/practiscore-scraper && node scraper.js 2>&1)'
 alias practiscore-json='(cd ~/.local/scripts/practiscore-scraper && node scraper.js 2>/dev/null | jq ".[0]")'
 
+export OBSIDIAN_VAULT="/Users/cbown75/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian"
 export obyt='/Users/cbown75/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Obsidian/Resources/Media/Youtube/NeedsOrganized'
 
