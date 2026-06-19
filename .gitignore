@@ -39,6 +39,10 @@ luac.out
 *.x86_64
 *.hex
 
+# Hermes runtime state/persona is standalone; never track it in dotfiles.
+/.hermes/
+.hermes/
+
 # Lazy
 lazy-lock.json
 lazyvim.json
