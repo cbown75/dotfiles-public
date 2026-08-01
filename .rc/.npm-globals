@@ -1,0 +1,18 @@
+# Global npm CLIs — installed automatically by .rc/.zsh-autoinstall
+#
+# Format:  <package> <binary>
+#
+# The binary column is what `command -v` should find. It is NOT always
+# derivable from the package name — @playwright/cli installs `playwright-cli`,
+# and the `neovim` package installs `neovim-node-host` (the `nvim` binary
+# itself comes from the Homebrew formula, which is tracked in Brewfile).
+#
+# Brewfile tracks brew/cask/tap. This tracks the global npm layer, which
+# brew bundle cannot see. Adding a line here installs it on every machine
+# at next shell start.
+
+cf                              cf
+@openai/codex                   codex
+@playwright/cli                 playwright-cli
+neovim                          neovim-node-host
+@earendil-works/pi-coding-agent pi

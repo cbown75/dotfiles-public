@@ -43,3 +43,33 @@ fi
 if [ ! -f "$HOME/go/bin/mcp-grafana" ] && command -v go &> /dev/null; then
   go install github.com/grafana/mcp-grafana/cmd/mcp-grafana@latest
 fi
+
+# Install global npm CLIs listed in .rc/.npm-globals
+# Presence is checked with `command -v` (a shell builtin) rather than
+# `npm ls -g`, so this costs nothing on a warm machine.
+if command -v npm >/dev/null 2>&1 && [[ -r ~/.rc/.npm-globals ]]; then
+  () {
+    local -a missing all
+    local pkg bin line
+    local stamp=~/.cache/npm-globals-updated
+
+    while read -r pkg bin; do
+      [[ -z "$pkg" || "$pkg" == \#* ]] && continue
+      all+=("$pkg")
+      command -v "$bin" >/dev/null 2>&1 || missing+=("$pkg")
+    done < ~/.rc/.npm-globals
+
+    if (( ${#missing} )); then
+      echo "Installing global npm CLIs: ${missing[*]}"
+      npm install -g "${missing[@]}"
+    fi
+
+    # Update weekly, in the background so it never blocks a shell.
+    if (( ${#all} )); then
+      mkdir -p ~/.cache
+      if [[ ! -f "$stamp" ]] || [[ -n "$(find "$stamp" -mtime +7 2>/dev/null)" ]]; then
+        ( npm update -g "${all[@]}" >/dev/null 2>&1 && touch "$stamp" ) &!
+      fi
+    fi
+  }
+fi
