@@ -38,6 +38,8 @@ return {
 				"markdown_inline",
 				"regex",
 				"yaml",
+				"helm",
+				"gotmpl",
 				"hcl",
 				"python",
 			})

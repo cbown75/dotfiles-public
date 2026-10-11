@@ -10,6 +10,7 @@ return {
 		anti_conceal = {
 			enabled = true,
 		},
+		latex = { enabled = false }, -- snacks.image renders math
 	},
 	-- Pin to a stable version to avoid module loading issues
 	version = "v8.7.15",
