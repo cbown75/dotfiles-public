@@ -44,6 +44,21 @@ if [ ! -f "$HOME/go/bin/mcp-grafana" ] && command -v go &> /dev/null; then
   go install github.com/grafana/mcp-grafana/cmd/mcp-grafana@latest
 fi
 
+# Install tmux plugin manager. Plugins live beside the config, so TPM does too;
+# tmux.conf runs it from this path.
+if [[ ! -d ~/.config/tmux/plugins/tpm ]] && command -v git &> /dev/null; then
+  echo "Installing tmux plugin manager..."
+  git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
+fi
+
+# Install the plugins tmux.conf declares. install_plugins needs a tmux server
+# that has already run TPM, so this only works from inside tmux.
+if [[ -n "$TMUX" && -x ~/.config/tmux/plugins/tpm/bin/install_plugins ]] \
+  && [[ ! -d ~/.config/tmux/plugins/tmux-sensible ]]; then
+  ( ~/.config/tmux/plugins/tpm/bin/install_plugins >/dev/null 2>&1 \
+    && tmux source-file ~/.config/tmux/tmux.conf ) &!
+fi
+
 # Install global npm CLIs listed in .rc/.npm-globals
 # Presence is checked with `command -v` (a shell builtin) rather than
 # `npm ls -g`, so this costs nothing on a warm machine.
