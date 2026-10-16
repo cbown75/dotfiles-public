@@ -42,5 +42,7 @@ yt() {
         shift
     fi
     local video_link="$1"
-    fabric -y "$video_link" $transcript_flag
+    # Without browser cookies YouTube refuses the anonymous caption download, and
+    # fabric reports it as "YouTube rate limit exceeded" even on the first request.
+    fabric-ai -y "$video_link" $transcript_flag --yt-dlp-args="--cookies-from-browser brave"
 }
