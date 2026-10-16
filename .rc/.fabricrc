@@ -29,7 +29,8 @@ for pattern_file in ~/.config/fabric/patterns/*; do
 done
 
 
-yt() {
+# The body runs in a subshell so the EXIT trap fires when yt returns, in zsh and bash.
+yt() (
     if [ "$#" -eq 0 ] || [ "$#" -gt 2 ]; then
         echo "Usage: yt [-t | --timestamps] youtube-link"
         echo "Use the '-t' flag to get the transcript with timestamps."
@@ -41,8 +42,17 @@ yt() {
         transcript_flag="--transcript-with-timestamps"
         shift
     fi
-    local video_link="$1"
+    video_link="$1"
     # Without browser cookies YouTube refuses the anonymous caption download, and
     # fabric reports it as "YouTube rate limit exceeded" even on the first request.
-    fabric-ai -y "$video_link" $transcript_flag --yt-dlp-args="--cookies-from-browser brave"
-}
+    # Helium is the default browser, but yt-dlp's --cookies-from-browser cannot find
+    # Helium's keychain entry, so a helper decrypts its cookies into a private temp file.
+    cookies=$(mktemp "${TMPDIR:-/tmp}/yt-cookies.XXXXXX") || return 1
+    trap 'rm -f "$cookies"' EXIT
+    trap 'exit 130' INT
+    trap 'exit 143' TERM
+    chmod 600 "$cookies" || return 1
+    "$HOME/.dotfiles-public/bin/helium-youtube-cookies" "$cookies" || return 1
+    # fabric reads stdin whenever it is not a terminal, so close it for scripted runs.
+    fabric-ai -y "$video_link" $transcript_flag --yt-dlp-args="--cookies $cookies" </dev/null
+)

@@ -1,0 +1,115 @@
+#!/opt/homebrew/bin/python3
+"""Write Helium's YouTube and Google cookies to an existing Netscape cookies file.
+
+yt-dlp cannot read Helium's cookies itself: on macOS it looks the cookie key up as
+"<Browser> Safe Storage", and Helium keeps it as "Helium Storage Key". Decrypting
+here keeps the keychain untouched. Usage: helium-youtube-cookies <cookies.txt>
+"""
+import hashlib
+import os
+import sqlite3
+import stat
+import subprocess
+import sys
+import urllib.parse
+
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+
+COOKIE_DB = os.path.expanduser(
+    "~/Library/Application Support/net.imput.helium/Default/Cookies")
+DOMAINS = ("youtube.com", "google.com")
+# Chrome stores expiry as microseconds since 1601-01-01.
+WINDOWS_EPOCH_OFFSET = 11644473600
+
+
+def die(msg):
+    print(f"helium-youtube-cookies: {msg}", file=sys.stderr)
+    sys.exit(1)
+
+
+def wanted(host):
+    host = host.lstrip(".")
+    return any(host == d or host.endswith("." + d) for d in DOMAINS)
+
+
+def cookie_key():
+    # The password reaches us on stdout, never in argv where ps would show it.
+    res = subprocess.run(
+        ["security", "find-generic-password", "-w",
+         "-s", "Helium Storage Key", "-a", "Helium"],
+        capture_output=True)
+    if res.returncode:
+        die("could not read 'Helium Storage Key' from the keychain")
+    password = res.stdout.rstrip(b"\n")
+    return hashlib.pbkdf2_hmac("sha1", password, b"saltysalt", 1003, 16)
+
+
+def decrypt(key, blob, hash_prefix):
+    if blob[:3] != b"v10":
+        return None
+    dec = Cipher(algorithms.AES(key), modes.CBC(b" " * 16)).decryptor()
+    plain = dec.update(blob[3:]) + dec.finalize()
+    pad = plain[-1]
+    if not 1 <= pad <= 16:
+        return None
+    plain = plain[:-pad]
+    # Cookie DB schema 24+ prefixes each value with SHA-256 of its host.
+    if hash_prefix:
+        plain = plain[32:]
+    try:
+        return plain.decode()
+    except UnicodeDecodeError:
+        return None
+
+
+def main():
+    if len(sys.argv) != 2:
+        die("usage: helium-youtube-cookies <existing cookies.txt>")
+    out = sys.argv[1]
+    # Refuse to create the file, or to fill one other users can read: the
+    # caller makes it with mktemp and chmod 600 first.
+    try:
+        fd = os.open(out, os.O_WRONLY | os.O_TRUNC | os.O_NOFOLLOW)
+    except OSError:
+        die("output file must already exist and not be a symlink")
+    if os.fstat(fd).st_mode & (stat.S_IRWXG | stat.S_IRWXO):
+        os.close(fd)
+        die("output file must be mode 600")
+
+    key = cookie_key()
+    # immutable=1 reads the live DB without taking Helium's lock.
+    uri = "file:" + urllib.parse.quote(COOKIE_DB) + "?immutable=1"
+    try:
+        db = sqlite3.connect(uri, uri=True)
+        version = int(db.execute(
+            "SELECT value FROM meta WHERE key = 'version'").fetchone()[0])
+        rows = db.execute(
+            "SELECT host_key, name, value, encrypted_value, path, expires_utc,"
+            " is_secure FROM cookies").fetchall()
+        db.close()
+    except sqlite3.Error:
+        die(f"could not read {COOKIE_DB}")
+
+    lines = ["# Netscape HTTP Cookie File"]
+    for host, name, value, enc, path, expires, secure in rows:
+        if not wanted(host):
+            continue
+        if enc:
+            value = decrypt(key, enc, version >= 24)
+            if value is None:
+                continue
+        expiry = max(0, expires // 1_000_000 - WINDOWS_EPOCH_OFFSET) if expires else 0
+        lines.append("\t".join([
+            host, "TRUE" if host.startswith(".") else "FALSE", path,
+            "TRUE" if secure else "FALSE", str(expiry), name, value]))
+
+    if len(lines) == 1:
+        os.close(fd)
+        die("no YouTube or Google cookies found in Helium")
+    with os.fdopen(fd, "w") as f:
+        f.write("\n".join(lines) + "\n")
+    print(f"helium-youtube-cookies: wrote {len(lines) - 1} cookies", file=sys.stderr)
+
+
+if __name__ == "__main__":
+    main()
